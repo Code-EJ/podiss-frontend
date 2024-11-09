@@ -1,33 +1,63 @@
-// src/components/user/ContactForm.tsx
-import React from 'react';
+import React, { useState } from 'react';
+import ButtomForm from './buttom-form';
+import TextField from './text-field';
 
 const ContactForm: React.FC = () => {
-  return (
-    <aside className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Contato</h2>
-      <form className="flex flex-col">
-        <label htmlFor="nome" className="mb-2 font-semibold">
-          Nome:
-        </label>
-        <input type="text" id="nome" name="nome" required className="mb-4 p-2 border rounded" />
-        <label htmlFor="email" className="mb-2 font-semibold">
-          Email:
-        </label>
-        <input type="email" id="email" name="email" required className="mb-4 p-2 border rounded" />
-        <label htmlFor="assunto" className="mb-2 font-semibold">
-          Assunto:
-        </label>
-        <input type="text" id="assunto" name="assunto" required className="mb-4 p-2 border rounded" />
-        <label htmlFor="mensagem" className="mb-2 font-semibold">
-          Mensagem:
-        </label>
-        <textarea id="mensagem" name="mensagem" required className="mb-4 p-2 border rounded"></textarea>
-        <button type="submit" className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-          Mandá
-        </button>
-      </form>
-    </aside>
-  );
-};
+
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [subject, setSubject] = useState<string>('');
+    const [mensage, setMensage] = useState<string>('');
+  
+    const handleSubmit = (event: React.FormEvent) => {
+      event.preventDefault();
+  
+      setName('');
+      setEmail('');
+      setSubject('');
+      setMensage('');
+    };
+  
+    return (
+      <section className="bg-white p-8 rounded-lg shadow-lg max-w-3xl mx-auto mt-8">
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Contato</h2>
+        <form className="flex flex-col" onSubmit={handleSubmit}>
+
+            <TextField
+              required={true}
+              label="Nome"
+              placeholder="Digite seu nome"
+              value={name}
+              onChange={value => setName(value)} />
+          
+            <TextField
+              required={true}
+              label="Email"
+              placeholder="Digite seu email"
+              value={email}
+              onChange={value => setEmail(value)} />
+          
+            <TextField
+              required={true}
+              label="Assunto"
+              placeholder="Digite o assunto"
+              value={subject}
+              onChange={value => setSubject(value)} />
+
+            <TextField
+              required={true}
+              label="Mensagem"
+              placeholder="Digite a mensagem"
+              value={mensage}
+              onChange={value => setMensage(value)} />
+  
+            <ButtomForm>
+                Mandá pra nóis!
+            </ButtomForm>
+          
+        </form>
+      </section>
+    );
+  };
 
 export default ContactForm;

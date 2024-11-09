@@ -1,28 +1,52 @@
-// src/components/user/SuggestionForm.tsx
-import React from 'react';
+import React, { useState } from 'react';
+import ButtomForm from './buttom-form';
+import TextField from './text-field';
 
 const SuggestionForm: React.FC = () => {
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [theme, setTheme] = useState<string>('');
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    setName('');
+    setEmail('');
+    setTheme('');
+  };
+
   return (
-    <aside className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Sugira um Tema</h2>
-      <form className="flex flex-col">
-        <label htmlFor="nome" className="mb-2 font-semibold">
-          Nome:
-        </label>
-        <input type="text" id="nome" name="nome" required className="mb-4 p-2 border rounded" />
-        <label htmlFor="email" className="mb-2 font-semibold">
-          Email:
-        </label>
-        <input type="email" id="email" name="email" required className="mb-4 p-2 border rounded" />
-        <label htmlFor="tema" className="mb-2 font-semibold">
-          Sugestão de Tema:
-        </label>
-        <textarea id="tema" name="tema" required className="mb-4 p-2 border rounded"></textarea>
-        <button type="submit" className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-          Mandá pra nóis!
-        </button>
+    <section className="bg-white p-8 rounded-lg shadow-lg max-w-3xl mx-auto mt-8">
+      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Sugira um Tema</h2>
+      <form className="flex flex-col" onSubmit={handleSubmit}>
+
+        <TextField
+            required={true}
+            label="Nome"
+            placeholder="Digite seu nome"
+            value={name}
+            onChange={value => setName(value)} />
+        
+        <TextField
+            required={true}
+            label="Email"
+            placeholder="Digite seu email"
+            value={email}
+            onChange={value => setEmail(value)} />
+        
+        <TextField
+            required={true}
+            label="Tema"
+            placeholder="Digite o tema"
+            value={theme}
+            onChange={value => setTheme(value)} />
+
+        <ButtomForm>
+            Mandá pra nóis!
+        </ButtomForm>
+        
       </form>
-    </aside>
+    </section>
   );
 };
 
