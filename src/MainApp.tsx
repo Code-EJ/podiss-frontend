@@ -16,22 +16,35 @@ import EpisodeListPage from './pages/admin/epidode-list-page-admin';
 import PostListPage from './pages/user/user-list-post-page';
 import PostDetailPage from './pages/user/post-detail-page';
 import UserEpisodes from './pages/user/user-homepage';
+import UserInitialPetry from './pages/user/user-initial-petry';
+import AboutUs from './pages/user/about-us';
 
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-
-        <Route path="/" element={<UserLayout />}>
-          <Route index element={<UserHomePage />} />
-          <Route path="episodes" element={<UserEpisodes />} />
-          <Route path="video/:id" element={<VideoPlayerPage />} />
-          <Route path="/posts" element={<PostListPage />} />
-          <Route path="/posts/:id" element={<PostDetailPage />} />
+        {/* Rota Principal */}
+        <Route path="/" element={<UserInitialPetry />}>
+          <Route path="" element={<UserEpisodes />} />
         </Route>
 
-        <Route path="/admin/login" element={<AdminLoginPage />} />
+        {/* Rota para "/home" */}
+        <Route path="/home" element={<UserLayout />}>
+          <Route path='sobre-nos' element={<AboutUs/>} />
+          <Route index element={<UserHomePage />} />
+          <Route path="episodes" element={<UserEpisodes />} />
+          {/* Remover a rota "/home/video/:id" */}
+          {/* <Route path="video/:id" element={<VideoPlayerPage />} /> */}
+          <Route path="posts" element={<PostListPage />} />
+          <Route path="posts/:id" element={<PostDetailPage />} />
+        </Route>
+
+        {/* Adicionar a rota "/video/:id" no nível superior */}
+        <Route path="/video/:id" element={<VideoPlayerPage />} />
+
+        {/* Rotas de Administração */}
+        <Route path="admin/login" element={<AdminLoginPage />} />
         <Route
           path="/admin/*"
           element={
@@ -50,4 +63,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default App; 

@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { AuthContext } from '../../auth-context';
+import GetUrl from '../../database';
 
 const LoginAdminPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -24,7 +25,7 @@ const LoginAdminPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', { username, password });
+      const response = await axios.post(`${GetUrl()}/api/auth/login`, { username, password });
       const token = response.data.token;
       login(token);
       navigate(from, { replace: true });
@@ -81,8 +82,8 @@ const LoginAdminPage: React.FC = () => {
           </button>
         </form>
 
-        {/* Exibe a mensagem de erro, se houver */}
-        {error && ( // Alterado de errorMessage para error
+       
+        {error && ( 
           <p className="mt-4 text-center text-red-500">
             {error}
           </p>

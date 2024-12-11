@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { AiOutlineCloudUpload } from 'react-icons/ai'; // Importando ícone de upload
 import api from "../../api";
+import GetUrl from "../../database";
 
 
 type Episode = {
@@ -21,7 +22,7 @@ export function VideoUploader({ onVideoAdded }: VideoUploaderProps) {
 
     const handleUpload = async () => {
         try {
-            const response = await api.post('http://localhost:8080/episodes', {
+            const response = await api.post(`${GetUrl()}/episodes`, {
                 videoUrl: videoUrl
             });
             const newEpisode = response.data;

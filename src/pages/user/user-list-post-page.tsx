@@ -1,6 +1,7 @@
-// src/pages/PostListPage.tsx
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import GetUrl from '../../database';
 
 interface Post {
   id: string;
@@ -19,7 +20,7 @@ const PostListPage: React.FC = () => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get<Post[]>('http://localhost:8080/posts');
+        const response = await axios.get<Post[]>(`${GetUrl()}/posts/`);
         setPosts(response.data.reverse());
       } catch (err) {
         setError('Erro ao carregar os posts.');
@@ -41,7 +42,7 @@ const PostListPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold mb-8">Óia só esses posts:</h1>
+      <h1 className="text-4xl font-bold text-zinc-700 mb-8">Óia só esses posts:</h1>
       <p className="mb-12 text-gray-600 max-w-2xl">
         Página dedicada aos posts do site.
       </p>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import GetUrl from '../../database';
 
 type VideoPlayerPageParams = {
   id: string;
@@ -23,7 +24,7 @@ export function VideoPlayerPage() {
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/episodes/video/${id}`);
+        const response = await fetch(`${GetUrl()}/video/${id}`);
         const data = await response.json();
         setVideoData({
           title: data.title,
@@ -47,7 +48,6 @@ export function VideoPlayerPage() {
           height="500px"
           src={`https://www.youtube.com/embed/${id}`} 
           title="YouTube video player" 
-          frameBorder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
           allowFullScreen>
         </iframe>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { FaTags, FaArrowLeft } from 'react-icons/fa';
+import GetUrl from '../../database';
 
 interface Post {
   id: string;
@@ -23,7 +24,7 @@ const PostDetailPage: React.FC = () => {
       if (!id) return;
       setLoading(true);
       try {
-        const response = await axios.get<Post>(`http://localhost:8080/posts/${id}`);
+        const response = await axios.get<Post>(`${GetUrl()}/posts/${id}`);
         setPost(response.data);
       } catch (err) {
         setError('Erro ao carregar o post.');
