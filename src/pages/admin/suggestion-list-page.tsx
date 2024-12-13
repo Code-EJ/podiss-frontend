@@ -32,7 +32,8 @@ const SuggestionListPage: React.FC = () => {
         return response.json();
       })
       .then(data => {
-        setSugestoes(data);
+        const sugestoesInvertidas = data.reverse();
+        setSugestoes(sugestoesInvertidas);
         setLoading(false);
       })
       .catch(error => {

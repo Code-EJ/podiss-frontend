@@ -6,6 +6,7 @@ interface Mensagem {
   id: string;
   nome: string;
   email: string;
+  assunto: string;
   mensagem: string;
 }
 
@@ -15,7 +16,6 @@ const MessageListPage: React.FC = () => {
   const { token } = useContext(AuthContext);
 
   useEffect(() => {
-    // Verifica se temos o token
     if (!token) {
       console.error("Token não encontrado. Você precisa estar autenticado.");
       return;
@@ -33,7 +33,8 @@ const MessageListPage: React.FC = () => {
         return response.json();
       })
       .then(data => {
-        setMensagens(data);
+        const mensagensInvertidas = data.reverse();
+        setMensagens(mensagensInvertidas);
         setLoading(false);
       })
       .catch(error => {
@@ -61,6 +62,7 @@ const MessageListPage: React.FC = () => {
             <tr>
               <th className="px-4 py-2 border">Nome</th>
               <th className="px-4 py-2 border">Email</th>
+              <th className="px-4 py-2 border">Assunto</th>
               <th className="px-4 py-2 border">Mensagem</th>
             </tr>
           </thead>
@@ -69,6 +71,7 @@ const MessageListPage: React.FC = () => {
               <tr key={mensagem.id}>
                 <td className="px-4 py-2 border">{mensagem.nome}</td>
                 <td className="px-4 py-2 border">{mensagem.email}</td>
+                <td className="px-4 py-2 border">{mensagem.assunto}</td>
                 <td className="px-4 py-2 border">{mensagem.mensagem}</td>
               </tr>
             ))}
