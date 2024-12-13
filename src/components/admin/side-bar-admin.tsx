@@ -1,9 +1,10 @@
 // components/admin/SidebarAdmin.tsx
 import React, { useState } from 'react';
 import { AiOutlineFileAdd, AiOutlineUnorderedList, AiOutlineVideoCamera } from 'react-icons/ai';
-import { MdOutlineLibraryAdd, MdLogout } from 'react-icons/md';
+import { MdOutlineLightbulb, MdOutlineLibraryAdd, MdLogout } from 'react-icons/md';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../auth-context';
+import { TbMessage } from 'react-icons/tb';
 
 
 const SidebarAdmin = () => {
@@ -70,6 +71,25 @@ const SidebarAdmin = () => {
             >
               <MdOutlineLibraryAdd className="mr-3" />
               Listar Episódios
+            </li>
+            <li
+              className={`p-4 flex items-center hover:bg-gray-200 cursor-pointer transition rounded-md ${
+                activeMenu === '/admin/sugestoes-admin' ? 'bg-blue-200 font-bold shadow-lg' : ''
+              }`}
+              onClick={() => handleNavigation('/admin/sugestoes-admin')}
+            >
+              <MdOutlineLightbulb className="mr-3" />
+              Sugestões Recebidas
+            </li>
+
+            <li
+              className={`p-4 flex items-center hover:bg-gray-200 cursor-pointer transition rounded-md ${
+                activeMenu === '/admin/mensagens-admin' ? 'bg-blue-200 font-bold shadow-lg' : ''
+              }`}
+              onClick={() => handleNavigation('/admin/mensagens-admin')}
+            >
+              <TbMessage className="mr-3" />
+              Mensagens Recebidas
             </li>
           </ul>
         </nav>

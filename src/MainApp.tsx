@@ -18,6 +18,8 @@ import PostDetailPage from './pages/user/post-detail-page';
 import UserEpisodes from './pages/user/user-homepage';
 import UserInitialPetry from './pages/user/user-initial-petry';
 import AboutUs from './pages/user/about-us';
+import SuggestionListPage from './pages/admin/suggestion-list-page';
+import MessageListPage from './pages/admin/message-list-page';
 
 
 const App: React.FC = () => {
@@ -41,7 +43,6 @@ const App: React.FC = () => {
         <Route path="/video/:id" element={<VideoPlayerPage />} />
         <Route path="/posts/:id" element={<PostDetailPage />} />
 
-        {/* Rotas de Administração */}
         <Route path="admin/login" element={<AdminLoginPage />} />
         <Route
           path="/admin/*"
@@ -55,6 +56,8 @@ const App: React.FC = () => {
           <Route path="create-post" element={<CreatePostPage />} />
           <Route path="create-episode" element={<CreateEpisodePage />} />
           <Route path="episodes-admin" element={<EpisodeListPage />} />
+          <Route path="sugestoes-admin" element={<SuggestionListPage />} />
+          <Route path="mensagens-admin" element={<MessageListPage />} />
         </Route>
       </Routes>
     </Router>
