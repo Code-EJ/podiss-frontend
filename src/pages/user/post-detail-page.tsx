@@ -61,9 +61,6 @@ const PostDetailPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <Link to="/posts" className="text-blue-500 flex items-center mb-4">
-        <FaArrowLeft className="mr-2" /> Voltar para Posts
-      </Link>
       <div className="bg-white rounded-lg shadow-md p-6">
         <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
         <p className="text-gray-500 mb-2">{formatDate(post.createdAt)}</p>

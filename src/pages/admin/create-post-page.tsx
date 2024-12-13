@@ -64,7 +64,7 @@ const CreatePostPage = () => {
                     </div>
 
                     <div className="mb-6">
-                        <label htmlFor="tags" className="block text-gray-700 text-lg font-semibold mb-2">Tags:</label>
+                        <label htmlFor="tags" className="block text-gray-700 text-lg font-semibold mb-2">Categorias:</label>
                         <div className="flex mb-2">
                             {categories.map((category) => (
                                 <div key={category} className="py-1.5 px-2.5 rounded-md bg-gray-200 flex items-center justify-center gap-2 mr-2">
@@ -75,7 +75,7 @@ const CreatePostPage = () => {
                         </div>
                         <input
                             type="text"
-                            placeholder="Digite uma tag e pressione Enter"
+                            placeholder="Digite uma categoria e pressione Enter"
                             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {

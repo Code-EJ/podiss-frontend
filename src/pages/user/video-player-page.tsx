@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import GetUrl from '../../database';
+import UserNavbar from '../../components/user/user-navbar';
 
 type VideoPlayerPageParams = {
   id: string;
@@ -24,7 +25,7 @@ export function VideoPlayerPage() {
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
-        const response = await fetch(`${GetUrl()}/video/${id}`);
+        const response = await fetch(`${GetUrl()}/episodes/${id}`);
         const data = await response.json();
         setVideoData({
           title: data.title,
@@ -40,7 +41,10 @@ export function VideoPlayerPage() {
   }, [id]);
 
   return (
+    
     <div className="flex flex-col items-center justify-center py-5">
+      <UserNavbar/>
+      <h2 className="text-zinc-950 text-2xl font-bold mb-2 pt-28">{videoData.title}</h2>
       <div className="w-full max-w-4xl p-5 rounded-lg">
         <iframe 
           className="w-full h-96 mb-4"
@@ -51,7 +55,7 @@ export function VideoPlayerPage() {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
           allowFullScreen>
         </iframe>
-        <h2 className="text-zinc-950 text-2xl font-bold mb-2">{videoData.title}</h2>
+        
         <p className="text-zinc-700 text-lg">{videoData.description}</p>
       </div>
     </div>

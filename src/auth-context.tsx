@@ -1,4 +1,4 @@
-// AuthContext.tsx
+
 import React, { createContext, useState} from 'react';
 
 type AuthContextType = {

@@ -20,7 +20,7 @@ const PostListPage: React.FC = () => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get<Post[]>(`${GetUrl()}/posts/`);
+        const response = await axios.get<Post[]>(`${GetUrl()}/posts`);
         setPosts(response.data.reverse());
       } catch (err) {
         setError('Erro ao carregar os posts.');

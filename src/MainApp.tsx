@@ -24,24 +24,22 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        {/* Rota Principal */}
+        
         <Route path="/" element={<UserInitialPetry />}>
           <Route path="" element={<UserEpisodes />} />
         </Route>
 
-        {/* Rota para "/home" */}
         <Route path="/home" element={<UserLayout />}>
           <Route path='sobre-nos' element={<AboutUs/>} />
           <Route index element={<UserHomePage />} />
           <Route path="episodes" element={<UserEpisodes />} />
-          {/* Remover a rota "/home/video/:id" */}
-          {/* <Route path="video/:id" element={<VideoPlayerPage />} /> */}
           <Route path="posts" element={<PostListPage />} />
-          <Route path="posts/:id" element={<PostDetailPage />} />
+          
         </Route>
 
         {/* Adicionar a rota "/video/:id" no nível superior */}
         <Route path="/video/:id" element={<VideoPlayerPage />} />
+        <Route path="/posts/:id" element={<PostDetailPage />} />
 
         {/* Rotas de Administração */}
         <Route path="admin/login" element={<AdminLoginPage />} />

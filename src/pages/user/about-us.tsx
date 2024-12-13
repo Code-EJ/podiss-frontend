@@ -1,44 +1,82 @@
 import React from 'react';
 
-interface TeamMember {
-  name: string;
-  position: string;
-  bio: string;
-  imageUrl: string;
-}
-
-const team: TeamMember[] = [
-  {
-    name: 'Felipe Araujo',
-    position: 'Desenvolvedor Full Stack',
-    bio: 'Felipe é um desenvolvedor com experiência em diversas tecnologias como JavaScript, TypeScript, React, Node.js e mais.',
-    imageUrl: 'https://github.com/FelipeGA02.png',
-  },
-  {
-    name: 'Joana Silva',
-    position: 'Designer UI/UX',
-    bio: 'Joana é uma designer apaixonada por criar interfaces intuitivas e agradáveis para os usuários.',
-    imageUrl: 'https://github.com/FelipeGA02.png',
-  },
-];
-
 const AboutUs: React.FC = () => {
   return (
-    <div className="px-6 py-8 font-sans">
-      <h1 className="text-4xl font-semibold mb-6 text-center">Sobre Nós</h1>
-      
-      <div className="flex flex-col items-center mb-12">
-        <img
-          src="https://s2-g1.glbimg.com/c4cIy6uiqHKoHT580oea1lNuMf0=/0x0:4608x3072/1008x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2018/I/j/BitFoaS9eTy4xqUhA5UA/img-2417.jpg"
-          alt="Missão"
-          className="w-1/5 h-1/3 rounded-lg mb-4"
-        />
-        <h2 className="text-3xl font-medium mb-4 text-center">Óia Nóis</h2>
-        <p className="text-lg text-center max-w-4xl">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad accusantium quam temporibus, doloribus earum mollitia nisi tempore architecto repellendus dolorum facilis ratione sed ea, inventore ab dignissimos laborum quidem recusandae sit nostrum. Iusto, unde deserunt aliquam sit debitis, pariatur porro eius magnam rerum officia amet harum quisquam maiores cumque quas fugit nam esse, ipsam iste accusantium quia quibusdam autem est. Eligendi hic eaque optio facere aliquam similique delectus vitae. Sit, laborum commodi odio labore voluptate consequatur, nisi modi amet beatae voluptatibus eius deserunt. Perspiciatis deserunt inventore fugit ex facere rem temporibus hic est eveniet eaque magnam quaerat soluta, debitis dolorum.
+    <div className="font-sans">
+      {/* Primeira Seção - Introdução com Gradiente */}
+      <section className="bg-gradient-to-b from-red-600 to-red-800 text-white text-center py-12">
+        <h1 className="text-4xl font-bold mb-4">Sobre Nós</h1>
+        <p className="text-lg max-w-3xl mx-auto px-4">
+          Seja bem-vindo ao <strong>PODISS!</strong> Um espaço onde compartilhamos histórias, causos e muita inspiração com um toque mineiro.
         </p>
-      </div>
-      
+      </section>
+
+      {/* Segunda Seção - História */}
+      <section className="bg-white text-black py-12 px-6 sm:px-12 lg:px-32">
+        <div className="flex flex-col sm:flex-row items-center gap-8">
+          {/* Texto */}
+          <div className="sm:w-1/2 text-lg leading-relaxed max-w-4xl">
+            <p className="mb-4">
+              <strong>PODISS?</strong> Foi o que perguntei à minha tia, quando ela me contava histórias sobre traduções feitas
+              diretamente do português para o inglês. Uma delas envolvia a professora Sueli.
+            </p>
+            <p className="mb-4">
+              Em seu primeiro dia de aula, Sueli começou a falar com os alunos em inglês, fazendo perguntas “simples” como:
+              “How are you”, “What is your name” às quais os alunos, morrendo de vergonha, iam respondendo como podiam. Então,
+              Sueli para em frente a uma aluna e pergunta:
+            </p>
+            <p className="italic mb-4">“How old are you?”</p>
+            <p className="mb-4">
+              A menina se levanta e, enfurecida, desfere:
+            </p>
+            <p className="italic font-semibold text-center mb-4">“I am not old! Old are… you!”</p>
+            <p className="mb-4">
+              Outras traduções estranhas andam povoando a língua de brasileiros que desejam brincar com as traduções diretas.
+              Esses “causos” me inspiraram a criar este podcast.
+            </p>
+          </div>
+          {/* Imagem */}
+          <div className="sm:w-1/2">
+            <img
+              src="/yolanda_3.jpeg"
+              alt="Yolanda"
+              className="rounded-lg shadow-lg w-full object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Terceira Seção - Conclusão */}
+      <section className="bg-white text-black py-12 px-6 sm:px-12 lg:px-32">
+        <div className="text-lg leading-relaxed max-w-4xl mx-auto">
+          <p className="mb-4">
+            Contudo, este podcast não é somente sobre casos engraçados ou sobre o jeito mineiro de dizer as coisas. Sou a criadora da ideia, nasci em Belo Horizonte, MG, amo meu país. 
+          </p>
+          <p className="mb-4">
+            Sou filha, mãe de três filhos lindos, dois que ainda moram em Belo Horizonte, e uma menina que mora comigo nos Estados Unidos, mulher, amiga, companheira e feliz. Aprendo todos os dias a levar uma vida mais leve e suave. 
+          </p>
+
+          <blockquote className="border-l-4 border-gray-400 p-4 mb-4">
+            Sou professora de Português numa High School e lido o tempo todo com situações que eu mesma vivencio na pronúncia do inglês.
+            
+          </blockquote>
+
+          <p className="mb-4">
+            A ideia nasceu para levar leveza a todos, situações engraçadas, inusitadas e mesmo dúvidas, porque a pergunta “Pode isso?” cabe em qualquer situação destas anteriormente ditas.
+          </p>
+
+          <ul>
+            <li>Espero que vocês curtam e divirtam-se.</li>
+            <li>Aprendam conosco.</li>
+            <li>Compartilhem ideias e fatos interessantes.</li>
+          </ul>
+
+          <p className="text-right font-semibold">
+            Sejam muito bem-vindos! Com carinho,<br />
+            <span className="italic">Yolanda Gramiscelli</span>
+          </p>
+        </div>
+    </section>
     </div>
   );
 };
