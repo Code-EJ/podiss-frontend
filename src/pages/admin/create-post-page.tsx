@@ -1,5 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
-import api from '../../api';
+import React, { FormEvent, useState } from 'react';
 import axios from 'axios';
 import GetUrl from '../../database';
 
@@ -9,15 +8,7 @@ const CreatePostPage = () => {
     const [description, setDescription] = useState('');
     const [categories, setCategories] = useState<string[]>([]); // Armazena as tags
     const [error, setError] = useState('');
-    
-    const [file, setFile] = useState();
-
-    function handleChange(event:ChangeEvent<HTMLFormElement>) {
-        setFile(event.target.files[0])
-      }
-      
-    
-    
+    const [file, setFile] = useState<File>();
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -31,10 +22,11 @@ const CreatePostPage = () => {
 
         try {
             const formData = new FormData();
-            if(file){
-formData.append('image', file);
+
+            if (file) {
+                formData.append('image', file);
             }
-            
+
             formData.append('title', title);
             formData.append('description', description);
             formData.append('tags', JSON.stringify(categories));
@@ -48,7 +40,7 @@ formData.append('image', file);
      
             alert(`Post Criado!\nTítulo: ${response.data.title}\nDescrição: ${response.data.description}`);
             setTitle('');
-            setFile(null);
+            setFile(undefined);
             setDescription('');
             setCategories([]);
           } catch (error) {
@@ -111,12 +103,11 @@ formData.append('image', file);
                     <div className='mb-6'>
                         <input 
                         onChange={e => {
-                            if(e.target.files?[0] !== null){
-                                return;
-                            } 
-                            setFile(e.target.files?[0]);
+                            const file = e.target.files?.item(0);
+                            if(!file) return;
+                            setFile(file);
                         }}
-                        type="file" 
+                        type="file"
                         name="" 
                         id="" />
                         
