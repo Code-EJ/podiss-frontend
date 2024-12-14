@@ -1,8 +1,8 @@
 // src/pages/PostDetailPage.tsx
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams} from 'react-router-dom';
 import axios from 'axios';
-import { FaTags, FaArrowLeft } from 'react-icons/fa';
+import { FaTags} from 'react-icons/fa';
 import GetUrl from '../../database';
 
 interface Post {
@@ -62,6 +62,7 @@ const PostDetailPage: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       <div className="bg-white rounded-lg shadow-md p-6">
+      <img className='h-48 w-50 mx-auto ' src={`${GetUrl()}/posts/image/${post.id}`}/>
         <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
         <p className="text-gray-500 mb-2">{formatDate(post.createdAt)}</p>
         <div className="flex items-center mb-4">
