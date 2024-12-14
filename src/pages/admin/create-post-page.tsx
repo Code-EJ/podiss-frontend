@@ -1,5 +1,7 @@
-import React, { FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import api from '../../api';
+import axios from 'axios';
+import GetUrl from '../../database';
 
 
 const CreatePostPage = () => {
@@ -7,6 +9,15 @@ const CreatePostPage = () => {
     const [description, setDescription] = useState('');
     const [categories, setCategories] = useState<string[]>([]); // Armazena as tags
     const [error, setError] = useState('');
+    
+    const [file, setFile] = useState();
+
+    function handleChange(event:ChangeEvent<HTMLFormElement>) {
+        setFile(event.target.files[0])
+      }
+      
+    
+    
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -18,16 +29,26 @@ const CreatePostPage = () => {
 
         setError('');
 
-        const postData = {
-            title: title,
-            description: description,
-            tags: categories, // As categorias devem ser uma lista (array) de strings
-        };
-
         try {
-            const response = await api.post('/posts', postData);
+            const formData = new FormData();
+            if(file){
+formData.append('image', file);
+            }
+            
+            formData.append('title', title);
+            formData.append('description', description);
+            formData.append('tags', JSON.stringify(categories));
+
+            const config = {
+            headers: {
+                'content-type': 'multipart/form-data',
+            },
+            };
+            const response = await axios.post(GetUrl()+'/post', formData, config)
+     
             alert(`Post Criado!\nTítulo: ${response.data.title}\nDescrição: ${response.data.description}`);
             setTitle('');
+            setFile(null);
             setDescription('');
             setCategories([]);
           } catch (error) {
@@ -45,7 +66,7 @@ const CreatePostPage = () => {
     const removeCategory = (category: string) => {
         setCategories(prev => prev.filter(c => c !== category));
     };
-
+   
     return (
         <div className="p-8">
             <div className="max-w-4xl mx-auto">
@@ -87,7 +108,19 @@ const CreatePostPage = () => {
                             }}
                         />
                     </div>
-
+                    <div className='mb-6'>
+                        <input 
+                        onChange={e => {
+                            if(e.target.files?[0] !== null){
+                                return;
+                            } 
+                            setFile(e.target.files?[0]);
+                        }}
+                        type="file" 
+                        name="" 
+                        id="" />
+                        
+                    </div>
                     <div className="mb-6">
                         <label htmlFor="description" className="block text-gray-700 text-lg font-semibold mb-2">Descrição:</label>
                         <textarea
