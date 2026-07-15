@@ -44,8 +44,8 @@ const SuggestionForm: React.FC = () => {
   };
 
   return (
-    <section className="bg-white p-8 rounded-lg shadow-lg max-w-3xl mx-auto mt-8">
-      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Sugira um Tema</h2>
+    <section className="max-w-3xl p-8 mx-auto mt-8 bg-white rounded-lg shadow-lg">
+      <h2 className="mb-6 text-3xl font-bold text-center text-gray-800">Sugira um Tema</h2>
       <form className="flex flex-col" onSubmit={handleSubmit}>
 
         <TextField
@@ -73,7 +73,7 @@ const SuggestionForm: React.FC = () => {
         />
 
         <ButtomForm>
-          Mandá pra nóis!
+          Manda pra nóis!
         </ButtomForm>
 
       </form>
