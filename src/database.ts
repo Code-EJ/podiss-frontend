@@ -1,5 +1,5 @@
 export default function GetUrl()
 {
-    //return 'http://srv639081.hstgr.cloud:8080'
-    return 'http://localhost:8080'
+    // O protocolo deve ser https, pois o SSL está ativado no seu backend
+    return 'https://localhost:8080'
 }
