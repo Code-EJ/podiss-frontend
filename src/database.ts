@@ -1,5 +1,5 @@
-export default function GetUrl()
-{
-    // O protocolo deve ser https, pois o SSL está ativado no seu backend
-    return 'https://localhost:8080'
+export const API_URL = import.meta.env.VITE_API_URL;
+
+if (!API_URL) {
+  throw new Error('VITE_API_URL is not defined');
 }
