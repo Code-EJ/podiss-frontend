@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import GetUrl from '../../database';
+import { API_URL } from '../../database';
 import { AuthContext } from '../../auth-context';
 
 interface Mensagem {
@@ -21,7 +21,7 @@ const MessageListPage: React.FC = () => {
       return;
     }
 
-    fetch(`${GetUrl()}/contatos`, {
+    fetch(`${ API_URL }/contatos`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

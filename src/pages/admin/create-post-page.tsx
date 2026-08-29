@@ -1,6 +1,6 @@
 import React, { FormEvent, useState, useContext } from 'react';
 import axios from 'axios';
-import GetUrl from '../../database';
+import { API_URL } from '../../database';
 import { AuthContext } from '../../auth-context';
 
 const CreatePostPage = () => {
@@ -39,7 +39,7 @@ const CreatePostPage = () => {
                 },
             };
 
-            const response = await axios.post(GetUrl() + '/posts', formData, config);
+            const response = await axios.post(API_URL  + '/posts', formData, config);
             
             alert(`Post Criado!\nTítulo: ${response.data.title}\nDescrição: ${response.data.description}`);
             setTitle('');
