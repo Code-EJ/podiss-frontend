@@ -1,7 +1,7 @@
 // pages/user/user-homepage.tsx
 import React, { useEffect, useState } from 'react';
 import { ContainerVideo } from '../../components/user/container-video';
-import GetUrl from '../../database';
+import { API_URL } from '../../database';
 
 interface Video {
   id: string;
@@ -20,7 +20,7 @@ const UserEpisodes: React.FC = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${GetUrl()}/episodes`);
+        const response = await fetch(`${ API_URL }/episodes`);
         if (!response.ok) {
           throw new Error('Falha ao buscar vídeos.');
         }

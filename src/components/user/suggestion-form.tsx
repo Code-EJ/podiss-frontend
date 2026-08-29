@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ButtomForm from './buttom-form';
 import TextField from './text-field';
-import GetUrl from '../../database';
+import { API_URL } from '../../database';
 
 const SuggestionForm: React.FC = () => {
   const [name, setName] = useState<string>('');
@@ -18,7 +18,7 @@ const SuggestionForm: React.FC = () => {
     };
 
     try {
-      const response = await fetch(`${GetUrl()}/sugestoes`, {
+      const response = await fetch(`${ API_URL }/sugestoes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

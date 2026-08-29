@@ -4,7 +4,7 @@ import { MdEdit, MdDelete } from 'react-icons/md';
 import api from '../../api';
 import { AuthContext } from '../../auth-context';
 import axios from 'axios';
-import GetUrl from '../../database';
+import { API_URL } from '../../database';
 
 
 interface Post {
@@ -27,7 +27,7 @@ const ListPostPage: React.FC = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`${GetUrl()}/posts`);
+        const response = await axios.get(`${ API_URL }/posts`);
         setPosts(response.data.reverse());
       } catch (error) {
         console.error("Erro ao buscar posts:", error);
