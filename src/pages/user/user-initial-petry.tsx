@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import GetUrl from '../../database';
+import { API_URL } from '../../database';
 import UserNavbar from '../../components/user/user-navbar';
 import { ContainerVideo } from '../../components/user/container-video';
 import SuggestionForm from '../../components/user/suggestion-form';
@@ -26,7 +26,7 @@ const UserInitialPetry: React.FC = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${GetUrl()}/episodes`);
+        const response = await fetch(`${ API_URL }/episodes`);
         if (!response.ok) {
           throw new Error('Falha ao buscar vídeos.');
         }

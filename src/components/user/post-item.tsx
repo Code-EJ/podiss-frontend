@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaTags } from 'react-icons/fa';
-import GetUrl from '../../database';
+import { API_URL } from '../../database';
 
 interface Post {
   id: string;
@@ -36,7 +36,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow duration-300">
-      <img src={`${GetUrl()}/posts/image/${post.id}`}/>
+      <img src={`${ API_URL }/posts/image/${post.id}`}/>
       <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
       <p className="text-gray-600 mb-4">{getPreview(post.description, 100)}</p>
       <div className="flex items-center mb-4">

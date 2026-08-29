@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import GetUrl from '../../database';
+import { API_URL } from '../../database';
 import { AuthContext } from '../../auth-context';
 
 interface Sugestao {
@@ -20,7 +20,7 @@ const SuggestionListPage: React.FC = () => {
       return;
     }
 
-    fetch(`${GetUrl()}/sugestoes`, {
+    fetch(`${ API_URL }/sugestoes`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

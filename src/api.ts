@@ -1,8 +1,8 @@
 import axios from 'axios';
-import GetUrl from './database';
+import { API_URL } from './database';
 
 const api = axios.create({
-  baseURL: GetUrl(),
+  baseURL: API_URL ,
 });
 
 api.interceptors.request.use(

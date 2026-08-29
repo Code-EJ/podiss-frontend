@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import GetUrl from '../../database';
+import { API_URL } from '../../database';
 import UserNavbar from '../../components/user/user-navbar';
 
 type VideoPlayerPageParams = {
@@ -25,7 +25,7 @@ export function VideoPlayerPage() {
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
-        const response = await fetch(`${GetUrl()}/episodes/${id}`);
+        const response = await fetch(`${ API_URL }/episodes/${id}`);
         const data = await response.json();
         setVideoData({
           title: data.title,

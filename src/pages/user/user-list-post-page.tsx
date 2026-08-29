@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import GetUrl from '../../database';
+import { API_URL } from '../../database';
 
 interface Post {
   id: string;
@@ -20,7 +20,7 @@ const PostListPage: React.FC = () => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get<Post[]>(`${GetUrl()}/posts`);
+        const response = await axios.get<Post[]>(`${ API_URL }/posts`);
         setPosts(response.data.reverse());
       } catch (err) {
         setError('Erro ao carregar os posts.');

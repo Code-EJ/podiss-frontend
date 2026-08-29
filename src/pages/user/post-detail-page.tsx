@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams} from 'react-router-dom';
 import axios from 'axios';
 import { FaTags} from 'react-icons/fa';
-import GetUrl from '../../database';
+import { API_URL } from '../../database';
 
 interface Post {
   id: string;
@@ -24,7 +24,7 @@ const PostDetailPage: React.FC = () => {
       if (!id) return;
       setLoading(true);
       try {
-        const response = await axios.get<Post>(`${GetUrl()}/posts/${id}`);
+        const response = await axios.get<Post>(`${ API_URL }/posts/${id}`);
         setPost(response.data);
       } catch (err) {
         setError('Erro ao carregar o post.');
@@ -62,7 +62,7 @@ const PostDetailPage: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       <div className="bg-white rounded-lg shadow-md p-6">
-      <img className='h-48 w-50 mx-auto ' src={`${GetUrl()}/posts/image/${post.id}`}/>
+      <img className='h-48 w-50 mx-auto ' src={`${ API_URL }/posts/image/${post.id}`}/>
         <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
         <p className="text-gray-500 mb-2">{formatDate(post.createdAt)}</p>
         <div className="flex items-center mb-4">

@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { AuthContext } from '../../auth-context';
-import GetUrl from '../../database';
+import { API_URL } from '../../database';
 
 const LoginAdminPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -25,7 +25,7 @@ const LoginAdminPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${GetUrl()}/api/auth/login`, { username, password });
+      const response = await axios.post(`${ API_URL }/api/auth/login`, { username, password });
       const token = response.data.token;
       login(token);
       navigate(from, { replace: true });
