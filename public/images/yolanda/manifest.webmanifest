@@ -1,0 +1,18 @@
+{
+  "name": "PodIss",
+  "short_name": "PodIss",
+  "description": "PodIss — Podcast platform.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo-podiss.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
