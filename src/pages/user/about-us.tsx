@@ -38,7 +38,7 @@ const AboutUs: React.FC = () => {
           {/* Imagem */}
           <div className="sm:w-1/2">
             <img
-              src="/yolanda_3.jpeg"
+              src="/images/yolanda/yolanda_3.jpeg"
               alt="Yolanda"
               className="rounded-lg shadow-lg w-full object-cover"
             />

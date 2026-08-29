@@ -15,7 +15,7 @@ const UserNavbar: React.FC = () => {
       <div className="w-full px-6 sm:px-8 lg:px-12 h-28 flex items-center justify-between">
         {/* Logo */}
         <div className="">
-          <img src="/logo-yolanda.svg.svg" alt="Logo" className="h-16 w-auto" />
+          <img src="/logo-podiss.svg" alt="Logo" className="h-16 w-auto" />
         </div>
 
         {/* Menu de Navegação Principal */}
