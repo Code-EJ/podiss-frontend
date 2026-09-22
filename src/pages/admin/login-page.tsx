@@ -3,7 +3,10 @@ import { adminReturnPath } from '../../navigation/routes';
 // src/pages/admin/AdminLoginPage.tsx
 import React, { useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import api, { errorMessage } from '../../api';
+import api from '../../api';
+import { useAsyncAction } from '../../hooks/use-async-action';
+import { Button } from '../../components/ui/button';
+import { Alert } from '../../components/ui/alert';
 
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { AuthContext } from '../../auth-context';
@@ -16,7 +19,7 @@ import { AuthContext } from '../../auth-context';
 const AdminLoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const { busy: submitting, error, run } = useAsyncAction();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
@@ -28,27 +31,24 @@ const AdminLoginPage: React.FC = () => {
   // Pega aquela rota original que o usuário tentou acessar
   const state = location.state as { from?: { pathname?: string } } | null;
   const from = adminReturnPath(state?.from?.pathname);
-  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
-    setSubmitting(true); setError(null);
-    try {
+    const result = await run(async () => {
       const response = await api.post<{ token: string }>(apiPaths.login, { username, password });
       const token = response.data.token;
       await login(token, rememberMe);
-      navigate(from, { replace: true });
-    } catch (err) {
-      setError(errorMessage(err));
-    } finally { setSubmitting(false); }
+    }, { loading: 'Verificando acesso...', success: 'Acesso autorizado.' });
+    if (result.ok) navigate(from, { replace: true });
   };
 
   return (
-    <div className="flex items-center justify-center py-12 bg-gradient-to-r from-red-700 to-red-500">
-      <div className="bg-white rounded-lg shadow-lg p-8 w-96">
+    <div className="flex items-center justify-center px-4 py-12 bg-gradient-to-r from-red-700 to-red-500">
+      <div className="bg-white rounded-lg shadow-lg p-5 sm:p-8 w-full max-w-sm">
         <h1 className="text-2xl font-bold text-center mb-6">Admin Login</h1>
         <form onSubmit={handleSubmit}>
+          <fieldset disabled={submitting}>
           <div className="mb-4">
             <label htmlFor="login-username" className="block text-gray-700">Usuário</label>
             <input
@@ -87,17 +87,12 @@ const AdminLoginPage: React.FC = () => {
             />
             <label htmlFor="remember-login" title="Mantém apenas o token neste navegador; não salva a senha." className="text-gray-700">Lembrar Senha</label>
           </div>
-          <button type="submit" disabled={submitting} className="w-full bg-red-500 text-white font-bold py-2 rounded">
-            Login
-          </button>
+          <Button type="submit" loading={submitting} loadingText="Entrando..." className="w-full">Login</Button>
+          </fieldset>
         </form>
 
 
-        {error && (
-          <p role="alert" className="mt-4 text-center text-red-500">
-            {error}
-          </p>
-        )}
+        <Alert message={error} />
 
 
       </div>

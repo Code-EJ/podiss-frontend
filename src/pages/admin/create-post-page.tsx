@@ -1,8 +1,9 @@
-import { apiPaths } from '../../services/api-paths';
+import { contentService } from '../../services/content-service';
+import { useAsyncAction } from '../../hooks/use-async-action';
+import { Button } from '../../components/ui/button';
+import { Alert } from '../../components/ui/alert';
+import { Badge } from '../../components/ui/badge';
 import { FormEvent, useState, useRef } from 'react';
-import api, { errorMessage } from '../../api';
-import { postForm } from '../../domain/post';
-import type { Post } from '../../types/api';
 
 
 
@@ -12,7 +13,7 @@ import type { Post } from '../../types/api';
  */
 const CreatePostPage = () => {
     const fileInput = useRef<HTMLInputElement>(null);
-    const [submitting, setSubmitting] = useState(false);
+    const { busy: submitting, error: actionError, run } = useAsyncAction();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [categories, setCategories] = useState<string[]>([]);
@@ -29,20 +30,14 @@ const CreatePostPage = () => {
         }
 
         setError('');
-        setSubmitting(true);
 
-        try {
-            const response = await api.post<Post>(apiPaths.posts, postForm(title, description, categories, file));
-
-            alert(`Post Criado!\nTítulo: ${response.data.title}\nDescrição: ${response.data.description}`);
-            setTitle('');
-            setFile(undefined);
+        const result = await run(() => contentService.createPost(title, description, categories, file), {
+            loading: 'Criando post...', success: 'Post criado com sucesso!',
+        });
+        if (result.ok) {
+            setTitle(''); setFile(undefined); setDescription(''); setCategories([]);
             if (fileInput.current) fileInput.current.value = '';
-            setDescription('');
-            setCategories([]);
-        } catch (error) {
-            setError(errorMessage(error));
-        } finally { setSubmitting(false); }
+        }
     };
 
     const addCategory = (category: string) => {
@@ -59,10 +54,11 @@ const CreatePostPage = () => {
     };
 
     return (
-        <div className="p-8">
+        <div className="px-4 py-8 sm:px-6">
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-3xl font-bold text-gray-800 mb-6">Criar Novo Post</h1>
-                <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg">
+                <form onSubmit={handleSubmit} className="bg-white p-5 sm:p-8 rounded-xl border border-gray-200 shadow-sm">
+                    <fieldset disabled={submitting} className="min-w-0">
                     <div className="mb-6">
                         <label htmlFor="title" className="block text-gray-700 text-lg font-semibold mb-2">Título:</label>
                         <input
@@ -80,14 +76,14 @@ const CreatePostPage = () => {
                         <div className="flex mb-2 flex-wrap">
                             {categories.map((category) => (
                                 <div key={category} className="py-1.5 px-2.5 rounded-md bg-gray-200 flex items-center justify-center gap-2 mr-2 mb-2">
-                                    <span className="text-gray-800">{category}</span>
-                                    <button type="button" onClick={() => removeCategory(category)} className="text-red-600 hover:text-red-800">X</button>
+                                    <Badge>{category}</Badge>
+                                    <button type="button" aria-label={`Remover categoria ${category}`} onClick={() => removeCategory(category)} className="text-red-600 hover:text-red-800">X</button>
                                 </div>
                             ))}
                         </div>
                         <input
                             type="text"
-                            placeholder="Digite uma categoria e pressione Enter"
+                            id="tags" placeholder="Digite uma categoria e pressione Enter"
                             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
@@ -128,13 +124,10 @@ const CreatePostPage = () => {
                         ></textarea>
                     </div>
 
-                    {error && (
-                        <p className="text-red-500 text-sm italic mb-4">{error}</p>
-                    )}
+                    <Alert message={error || actionError} />
 
-                    <button type="submit" disabled={submitting} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline">
-                        Criar Post
-                    </button>
+                    <Button type="submit" loading={submitting} loadingText="Criando post...">Criar Post</Button>
+                    </fieldset>
                 </form>
             </div>
         </div>

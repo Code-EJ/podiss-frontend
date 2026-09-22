@@ -13,9 +13,10 @@ describe('session boundaries', () => {
     expect(readToken()).toBeNull();
   });
   it('uses session storage unless remember is selected', () => {
-    saveSession(token(), false);
+    const value = token();
+    saveSession(value, false);
     expect(localStorage.getItem('podiss.auth.token')).toBeNull();
-    expect(readToken()).toBe(token());
+    expect(readToken()).toBe(value);
     clearSession(); expect(readToken()).toBeNull();
   });
   it('remembers only the token and expires it', () => {

@@ -73,6 +73,15 @@ try {
   response = await request('/posts/image/' + postId);
   assert.equal(response.status, 200); assert.equal(response.headers.get('content-type'), 'image/png');
   assert.deepEqual(Buffer.from(await response.arrayBuffer()), png);
+  const gif = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64');
+  const replacement = new FormData();
+  replacement.append('image', new Blob([gif], { type: 'image/gif' }), 'replacement.gif');
+  response = await request('/posts/' + postId + '/image', { method: 'PUT', body: replacement, authorized: true });
+  assert.equal(response.status, 200);
+  response = await request('/posts/image/' + postId + '?v=' + Date.now());
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('content-type'), 'image/gif');
+  assert.deepEqual(Buffer.from(await response.arrayBuffer()), gif, 'Replacement must return new bytes, not the previous image.');
   response = await request('/posts/' + postId + '/image', { method: 'DELETE', authorized: true });
   assert.equal(response.status, 204);
   response = await request('/posts/image/' + postId); assert.equal(response.status, 404);

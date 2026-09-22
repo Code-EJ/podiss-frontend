@@ -1,8 +1,9 @@
-import { apiPaths } from '../../services/api-paths';
+import { contentService } from '../../services/content-service';
+import { useAsyncAction } from '../../hooks/use-async-action';
+import { Alert } from '../ui/alert';
 import React, { useState } from 'react';
 import FormButton from './form-button';
 import TextField from './text-field';
-import api, { errorMessage } from '../../api';
 import type { ContactPayload } from '../../types/api';
 
 /**
@@ -15,13 +16,11 @@ const ContactForm: React.FC = () => {
   const [subject, setSubject] = useState<string>('');
   const [message, setMessage] = useState<string>('');
 
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { busy: submitting, error, run } = useAsyncAction();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (submitting) return;
-    setSubmitting(true); setError(null);
 
     const contact: ContactPayload = {
       nome: name,
@@ -30,19 +29,15 @@ const ContactForm: React.FC = () => {
       mensagem: message
     };
 
-    try {
-      await api.post(apiPaths.contacts, contact);
-      alert('Mensagem de contato enviada com sucesso!');
-      setName(''); setEmail('');
-      setSubject(''); setMessage('');
-    } catch (failure) { setError(errorMessage(failure)); }
-    finally { setSubmitting(false); }
+    const result = await run(() => contentService.contact(contact), { loading: 'Registrando mensagem...', success: 'Mensagem registrada com sucesso!' });
+    if (result.ok) { setName(''); setEmail(''); setSubject(''); setMessage(''); }
   };
 
   return (
-    <section className="max-w-3xl p-8 mx-auto mt-8 bg-white rounded-lg shadow-lg">
+    <section className="w-full max-w-3xl p-5 sm:p-8 mx-auto bg-white rounded-lg shadow-lg">
       <h2 className="mb-6 text-3xl font-bold text-center text-gray-800">Contato</h2>
       <form className="flex flex-col" onSubmit={handleSubmit}>
+        <fieldset disabled={submitting} className="min-w-0">
 
         <TextField
           required={true}
@@ -76,10 +71,11 @@ const ContactForm: React.FC = () => {
           onChange={value => setMessage(value)}
         />
 
-        {error && <p role="alert" className="text-red-600">{error}</p>}
-        <FormButton disabled={submitting}>
+        <Alert message={error} />
+        <FormButton loading={submitting}>
           Manda pra nóis!
         </FormButton>
+        </fieldset>
       </form>
     </section>
   );
