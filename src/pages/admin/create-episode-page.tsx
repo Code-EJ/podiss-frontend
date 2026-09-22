@@ -1,10 +1,14 @@
 
+import { useNavigate } from 'react-router-dom';
 import { VideoUploader } from '../../components/admin/video-uploader';
 
+/**
+ * Navigates to the episode list after the server successfully publishes a video.
+ * @author oEnzoRibas
+ */
 const CreateEpisodePage = () => {
-  const handleVideoAdded = (video: any) => {
-    console.log('Episódio adicionado:', video);
-  };
+  const navigate = useNavigate();
+  const handleVideoAdded = () => navigate('/admin/episodes-admin');
 
   return (
     <div className="container mx-auto px-4 py-8">

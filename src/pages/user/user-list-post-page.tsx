@@ -1,36 +1,18 @@
 
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { API_URL } from '../../database';
+import React from 'react';
+import { usePaginatedResource } from '../../hooks/use-paginated-resource';
+import { Pagination } from '../../components/pagination';
+import type { Post } from '../../types/api';
 
-interface Post {
-  id: string;
-  title: string;
-  description: string;
-  tags: string;
-  createdAt: string;
-}
 
+
+/**
+ * Displays paginated public post summaries; response tags remain comma-separated strings.
+ * @author oEnzoRibas
+ */
 const PostListPage: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get<Post[]>(`${ API_URL }/posts`);
-        setPosts(response.data.reverse());
-      } catch (err) {
-        setError('Erro ao carregar os posts.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPosts();
-  }, []);
+  const result = usePaginatedResource<Post>('/posts');
+  const { items: posts, loading, error } = result;
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen">Carregando...</div>;
@@ -46,6 +28,8 @@ const PostListPage: React.FC = () => {
       <p className="mb-12 text-gray-600 max-w-2xl">
         Página dedicada aos posts do site.
       </p>
+      <Pagination {...result} />
+      {posts.length === 0 && <p>Nenhum post encontrado.</p>}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
         {posts.map((post) => (
           <div key={post.id} className="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col">
@@ -54,7 +38,7 @@ const PostListPage: React.FC = () => {
             <p className="text-gray-700 mb-4">{post.description}</p>
             <div className="text-sm text-gray-600 mb-4">
               <span className="font-semibold">Categorias: </span>
-              {post.tags.split(',').map((tag) => (
+              {post.tags.split(',').filter(Boolean).map((tag) => (
                 <span key={tag} className="inline-block bg-purple-200 text-purple-800 px-2 py-1 rounded-full mr-2">
                   {tag.trim()}
                 </span>

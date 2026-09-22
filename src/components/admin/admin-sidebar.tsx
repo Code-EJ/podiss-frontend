@@ -1,5 +1,5 @@
 // components/admin/SidebarAdmin.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import { AiOutlineFileAdd, AiOutlineUnorderedList, AiOutlineVideoCamera } from 'react-icons/ai';
 import { MdOutlineLightbulb, MdOutlineLibraryAdd, MdLogout } from 'react-icons/md';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -7,14 +7,17 @@ import { AuthContext } from '../../auth-context';
 import { TbMessage } from 'react-icons/tb';
 
 
+/**
+ * Provides keyboard-accessible administrator navigation and logout. Active selection follows the current URL.
+ * @author oEnzoRibas
+ */
 const SidebarAdmin = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = React.useContext(AuthContext);
-  const [activeMenu, setActiveMenu] = useState(location.pathname);
+  const activeMenu = location.pathname;
 
   const handleNavigation = (path: string) => {
-    setActiveMenu(path);
     navigate(path);
   };
 
@@ -28,22 +31,25 @@ const SidebarAdmin = () => {
       <div>
         <div className="flex items-center justify-between p-4 bg-white">
           <h1 className="text-lg font-semibold">Admin</h1>
-          <button className="text-gray-600 hover:text-gray-900">☰</button>
+
         </div>
 
         <nav className="mt-4">
           <ul>
-            <li
-              className={`p-4 flex items-center hover:bg-gray-200 cursor-pointer transition rounded-md ${
+            <li>
+              <button type="button"
+              className={`w-full p-4 flex items-center hover:bg-gray-200 cursor-pointer transition rounded-md ${
                 activeMenu === '/admin/create-post' ? 'bg-blue-200 font-bold shadow-lg' : ''
               }`}
               onClick={() => handleNavigation('/admin/create-post')}
             >
               <AiOutlineFileAdd className="mr-3" />
               Criar Post
+              </button>
             </li>
 
-            <li
+            <li>
+              <button type="button"
               className={`p-4 flex items-center hover:bg-gray-200 cursor-pointer transition rounded-md ${
                 activeMenu === '/admin' ? 'bg-blue-200 font-bold shadow-lg' : ''
               }`}
@@ -51,9 +57,11 @@ const SidebarAdmin = () => {
             >
               <AiOutlineUnorderedList className="mr-3" />
               Listar Post
+              </button>
             </li>
 
-            <li
+            <li>
+              <button type="button"
               className={`p-4 flex items-center hover:bg-gray-200 cursor-pointer transition rounded-md ${
                 activeMenu === '/admin/create-episode' ? 'bg-blue-200 font-bold shadow-lg' : ''
               }`}
@@ -61,9 +69,11 @@ const SidebarAdmin = () => {
             >
               <AiOutlineVideoCamera className="mr-3" />
               Criar Episódio
+              </button>
             </li>
 
-            <li
+            <li>
+              <button type="button"
               className={`p-4 flex items-center hover:bg-gray-200 cursor-pointer transition rounded-md ${
                 activeMenu === '/admin/episodes-admin' ? 'bg-blue-200 font-bold shadow-lg' : ''
               }`}
@@ -71,25 +81,30 @@ const SidebarAdmin = () => {
             >
               <MdOutlineLibraryAdd className="mr-3" />
               Listar Episódios
+              </button>
             </li>
-            <li
+            <li>
+              <button type="button"
               className={`p-4 flex items-center hover:bg-gray-200 cursor-pointer transition rounded-md ${
-                activeMenu === '/admin/sugestoes-admin' ? 'bg-blue-200 font-bold shadow-lg' : ''
+                activeMenu === '/admin/suggestions' ? 'bg-blue-200 font-bold shadow-lg' : ''
               }`}
-              onClick={() => handleNavigation('/admin/sugestoes-admin')}
+              onClick={() => handleNavigation('/admin/suggestions')}
             >
               <MdOutlineLightbulb className="mr-3" />
               Sugestões Recebidas
+              </button>
             </li>
 
-            <li
+            <li>
+              <button type="button"
               className={`p-4 flex items-center hover:bg-gray-200 cursor-pointer transition rounded-md ${
-                activeMenu === '/admin/mensagens-admin' ? 'bg-blue-200 font-bold shadow-lg' : ''
+                activeMenu === '/admin/messages' ? 'bg-blue-200 font-bold shadow-lg' : ''
               }`}
-              onClick={() => handleNavigation('/admin/mensagens-admin')}
+              onClick={() => handleNavigation('/admin/messages')}
             >
               <TbMessage className="mr-3" />
               Mensagens Recebidas
+              </button>
             </li>
           </ul>
         </nav>

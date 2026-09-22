@@ -1,10 +1,17 @@
-import React, { FormEvent, useState, useContext } from 'react';
-import axios from 'axios';
-import { API_URL } from '../../database';
-import { AuthContext } from '../../auth-context';
+import { FormEvent, useState, useRef } from 'react';
+import api, { errorMessage } from '../../api';
+import { postForm } from '../../domain/post';
+import type { Post } from '../../types/api';
 
+
+
+/**
+ * Creates editorial content as multipart fields. Tags are repeated fields; image is optional and bounded.
+ * @author oEnzoRibas
+ */
 const CreatePostPage = () => {
-    const { token } = useContext(AuthContext); // Pegamos o token do contexto
+    const fileInput = useRef<HTMLInputElement>(null);
+    const [submitting, setSubmitting] = useState(false);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [categories, setCategories] = useState<string[]>([]);
@@ -13,6 +20,7 @@ const CreatePostPage = () => {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (submitting) return;
 
         if (!title.trim() || !description.trim()) {
             setError('Por favor, preencha todos os campos.');
@@ -20,39 +28,26 @@ const CreatePostPage = () => {
         }
 
         setError('');
+        setSubmitting(true);
 
         try {
-            const formData = new FormData();
+            const response = await api.post<Post>('/posts', postForm(title, description, categories, file));
 
-            if (file) {
-                formData.append('image', file);
-            }
-
-            formData.append('title', title);
-            formData.append('description', description);
-            formData.append('tags', JSON.stringify(categories).slice(1, -1));
-
-            const config = {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}`
-                },
-            };
-
-            const response = await axios.post(API_URL  + '/posts', formData, config);
-            
             alert(`Post Criado!\nTítulo: ${response.data.title}\nDescrição: ${response.data.description}`);
             setTitle('');
             setFile(undefined);
+            if (fileInput.current) fileInput.current.value = '';
             setDescription('');
             setCategories([]);
         } catch (error) {
-            console.error('Erro ao criar post:', error);
-            setError('Falha ao criar post.');
-        }
+            setError(errorMessage(error));
+        } finally { setSubmitting(false); }
     };
 
     const addCategory = (category: string) => {
+        if (category.length > 80 || category.includes(',') || categories.length >= 20) {
+            setError('Use até 20 categorias, com até 80 caracteres e sem vírgulas.'); return;
+        }
         if (category && !categories.includes(category)) {
             setCategories(prev => [...prev, category]);
         }
@@ -61,7 +56,7 @@ const CreatePostPage = () => {
     const removeCategory = (category: string) => {
         setCategories(prev => prev.filter(c => c !== category));
     };
-   
+
     return (
         <div className="p-8">
             <div className="max-w-4xl mx-auto">
@@ -71,7 +66,7 @@ const CreatePostPage = () => {
                         <label htmlFor="title" className="block text-gray-700 text-lg font-semibold mb-2">Título:</label>
                         <input
                             type="text"
-                            id="title"
+                            id="title" required maxLength={255}
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -108,8 +103,8 @@ const CreatePostPage = () => {
 
                     <div className='mb-6'>
                         <input
-                            type="file"
-                            accept="image/*"
+                            ref={fileInput} aria-label="Imagem do post" type="file"
+                            accept="image/jpeg,image/png,image/gif,image/webp"
                             onChange={e => {
                                 const fileSelected = e.target.files?.[0];
                                 if (fileSelected) {
@@ -123,7 +118,7 @@ const CreatePostPage = () => {
                     <div className="mb-6">
                         <label htmlFor="description" className="block text-gray-700 text-lg font-semibold mb-2">Descrição:</label>
                         <textarea
-                            id="description"
+                            id="description" required maxLength={10000}
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -136,7 +131,7 @@ const CreatePostPage = () => {
                         <p className="text-red-500 text-sm italic mb-4">{error}</p>
                     )}
 
-                    <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline">
+                    <button type="submit" disabled={submitting} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline">
                         Criar Post
                     </button>
                 </form>

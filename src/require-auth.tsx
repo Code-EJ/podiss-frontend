@@ -7,10 +7,15 @@ interface RequireAuthProps {
   children: JSX.Element;
 }
 
+/**
+ * Waits for server-backed administrator verification before rendering protected children.
+ * @author oEnzoRibas
+ */
 const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, isChecking } = useContext(AuthContext);
   const location = useLocation();
 
+  if (isChecking) return <p role="status">Verificando sessão...</p>;
   if (!isLoggedIn) {
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }

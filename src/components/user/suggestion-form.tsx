@@ -1,46 +1,39 @@
 import React, { useState } from 'react';
-import ButtomForm from './buttom-form';
+import FormButton from './form-button';
 import TextField from './text-field';
-import { API_URL } from '../../database';
+import api, { errorMessage } from '../../api';
+import type { SuggestionPayload } from '../../types/api';
 
+/**
+ * Submits a public topic suggestion. Personal data is never written to application logs.
+ * @author oEnzoRibas
+ */
 const SuggestionForm: React.FC = () => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [theme, setTheme] = useState<string>('');
 
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (submitting) return;
+    setSubmitting(true); setError(null);
 
-    const sugestao = {
+    const suggestion: SuggestionPayload = {
       nome: name,
       email: email,
       tema: theme,
     };
 
     try {
-      const response = await fetch(`${ API_URL }/sugestoes`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(sugestao)
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Sugestão enviada com sucesso:', data);
-        alert('Sugestão enviada com sucesso! Obrigado por contribuir!');
-        setName('');
-        setEmail('');
-        setTheme('');
-      } else {
-        console.error('Erro ao enviar sugestão:', response.statusText);
-        alert('Ocorreu um erro ao enviar a sugestão.');
-      }
-    } catch (error) {
-      console.error('Erro ao enviar sugestão:', error);
-      alert('Ocorreu um erro ao enviar a sugestão.');
-    }
+      await api.post('/sugestoes', suggestion);
+      alert('Sugestão enviada com sucesso! Obrigado por contribuir!');
+      setName(''); setEmail('');
+      setTheme('');
+    } catch (failure) { setError(errorMessage(failure)); }
+    finally { setSubmitting(false); }
   };
 
   return (
@@ -50,31 +43,32 @@ const SuggestionForm: React.FC = () => {
 
         <TextField
           required={true}
-          label="Nome"
+          label="Nome" maxLength={255}
           placeholder="Digite seu nome"
           value={name}
           onChange={value => setName(value)}
         />
-        
+
         <TextField
           required={true}
-          label="Email"
+          label="Email" type="email" maxLength={254}
           placeholder="Digite seu email"
           value={email}
           onChange={value => setEmail(value)}
         />
-        
+
         <TextField
           required={true}
-          label="Tema"
+          label="Tema" maxLength={2000}
           placeholder="Digite o tema"
           value={theme}
           onChange={value => setTheme(value)}
         />
 
-        <ButtomForm>
+        {error && <p role="alert" className="text-red-600">{error}</p>}
+        <FormButton disabled={submitting}>
           Manda pra nóis!
-        </ButtomForm>
+        </FormButton>
 
       </form>
     </section>

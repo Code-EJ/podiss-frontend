@@ -3,6 +3,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa'; // Importando ícones do react-icons/fa
 
+/**
+ * Provides public navigation in desktop and mobile layouts; labels remain in Portuguese.
+ * @author oEnzoRibas
+ */
 const UserNavbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -40,14 +44,12 @@ const UserNavbar: React.FC = () => {
           </Link>
           <Link
             className="text-custom-red text-3xl font-semibold hover:text-red-700 hover:border-b-2 hover:border-red-700 transition duration-300"
-            to="/home/sobre-nos"
+            to="/home/about"
           >
             Sobre Nós
           </Link>
-          <Link to="/admin/login">
-            <button className="bg-red-500 hover:bg-red-600 font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
+          <Link to="/admin/login" className="bg-red-500 hover:bg-red-600 font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
               <span className="text-white">Login</span>
-            </button>
           </Link>
         </div>
 
@@ -57,6 +59,7 @@ const UserNavbar: React.FC = () => {
             onClick={handleToggle}
             type="button"
             className="text-custom-red hover:text-red-700 focus:outline-none focus:text-red-700"
+            aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
             aria-controls="mobile-menu"
             aria-expanded={isOpen}
           >
@@ -71,7 +74,7 @@ const UserNavbar: React.FC = () => {
 
       {/* Menu Móvel */}
       {isOpen && (
-        <div className="md:hidden bg-white shadow-box-shadow">
+        <div id="mobile-menu" className="md:hidden bg-white shadow-box-shadow">
           <div className="px-6 pt-2 pb-3 space-y-1 sm:px-8">
             <Link
               onClick={() => setIsOpen(false)}
@@ -97,17 +100,14 @@ const UserNavbar: React.FC = () => {
             <Link
               onClick={() => setIsOpen(false)}
               className="block text-custom-red text-2xl font-semibold hover:text-red-700 hover:bg-gray-100 rounded-md px-3 py-2 transition duration-300"
-              to="/home/sobre-nos"
+              to="/home/about"
             >
               Sobre Nós
             </Link>
-            <Link to="/admin/login">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="w-full bg-red-500 hover:bg-red-600 font-bold py-2 px-4 rounded-lg shadow-md text-white transition duration-300"
-              >
+            <Link to="/admin/login"
+              onClick={() => setIsOpen(false)}
+              className="block text-center w-full bg-red-500 hover:bg-red-600 font-bold py-2 px-4 rounded-lg shadow-md text-white transition duration-300">
                 Login
-              </button>
             </Link>
           </div>
         </div>

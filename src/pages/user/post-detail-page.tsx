@@ -1,18 +1,16 @@
 // src/pages/PostDetailPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useParams} from 'react-router-dom';
-import axios from 'axios';
+import api, { errorMessage } from '../../api';
+import type { Post } from '../../types/api';
 import { FaTags} from 'react-icons/fa';
-import { API_URL } from '../../database';
+import { API_URL } from '../../config';
 
-interface Post {
-  id: string;
-  title: string;
-  description: string;
-  tags: string;
-  createdAt: string;
-}
 
+/**
+ * Loads one public post by UUID and aborts obsolete requests; absent images are not requested.
+ * @author oEnzoRibas
+ */
 const PostDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [post, setPost] = useState<Post | null>(null);
@@ -20,20 +18,22 @@ const PostDetailPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchPost = async () => {
       if (!id) return;
-      setLoading(true);
+      setLoading(true); setError(null); setPost(null);
       try {
-        const response = await axios.get<Post>(`${ API_URL }/posts/${id}`);
+        const response = await api.get<Post>(`/posts/${encodeURIComponent(id)}`, { signal: controller.signal });
         setPost(response.data);
       } catch (err) {
-        setError('Erro ao carregar o post.');
+        if (!controller.signal.aborted) setError(errorMessage(err));
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     };
 
     fetchPost();
+    return () => controller.abort();
   }, [id]);
 
   if (loading) {
@@ -50,7 +50,7 @@ const PostDetailPage: React.FC = () => {
 
 
   const getTags = (tags: string) => {
-    return tags.split(',').map((tag) => tag.trim());
+    return tags.split(',').filter(Boolean).map((tag) => tag.trim());
   };
 
 
@@ -62,7 +62,7 @@ const PostDetailPage: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       <div className="bg-white rounded-lg shadow-md p-6">
-      <img className='h-48 w-50 mx-auto ' src={`${ API_URL }/posts/image/${post.id}`}/>
+      {post.hasImage && <img alt={post.title} className='h-48 w-50 mx-auto ' src={`${ API_URL }/posts/image/${post.id}`}/>}
         <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
         <p className="text-gray-500 mb-2">{formatDate(post.createdAt)}</p>
         <div className="flex items-center mb-4">

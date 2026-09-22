@@ -1,59 +1,19 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { API_URL } from '../../database';
-import { AuthContext } from '../../auth-context';
+import React from 'react';
+import { usePaginatedResource } from '../../hooks/use-paginated-resource';
+import { Pagination } from '../../components/pagination';
+import type { SuggestionResponse } from '../../types/api';
 
-interface Sugestao {
-  id: string;
-  nome: string;
-  email: string;
-  tema: string;
-}
-
+/** Protected paginated inbox; Portuguese properties match the HTTP contract. @author oEnzoRibas */
 const SuggestionListPage: React.FC = () => {
-  const [sugestoes, setSugestoes] = useState<Sugestao[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const { token } = useContext(AuthContext);
-
-  useEffect(() => {
-    if (!token) {
-      console.error("Token não encontrado. Você precisa estar autenticado.");
-      return;
-    }
-
-    fetch(`${ API_URL }/sugestoes`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Erro ao obter sugestões');
-        }
-        return response.json();
-      })
-      .then(data => {
-        const sugestoesInvertidas = data.reverse();
-        setSugestoes(sugestoesInvertidas);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error("Erro ao buscar sugestões:", error);
-        setLoading(false);
-      });
-  }, [token]);
-
-  if (!token) {
-    return <div>Você não está autenticado.</div>;
-  }
-
-  if (loading) {
-    return <div>Carregando...</div>;
-  }
-
+  const result = usePaginatedResource<SuggestionResponse>('/sugestoes');
+  const { items: suggestions, loading, error } = result;
+  if (loading) return <p role="status">Carregando...</p>;
+  if (error) return <p role="alert" className="text-red-600">{error}</p>;
   return (
     <div className="p-4">
+      <Pagination {...result} />
       <h1 className="text-2xl font-bold mb-4">Sugestões Recebidas</h1>
-      {sugestoes.length === 0 ? (
+      {suggestions.length === 0 ? (
         <p>Nenhuma sugestão encontrada.</p>
       ) : (
         <table className="min-w-full bg-white">
@@ -65,11 +25,11 @@ const SuggestionListPage: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {sugestoes.map((sugestao) => (
-              <tr key={sugestao.id}>
-                <td className="px-4 py-2 border">{sugestao.nome}</td>
-                <td className="px-4 py-2 border">{sugestao.email}</td>
-                <td className="px-4 py-2 border">{sugestao.tema}</td>
+            {suggestions.map((suggestion) => (
+              <tr key={suggestion.id}>
+                <td className="px-4 py-2 border">{suggestion.nome}</td>
+                <td className="px-4 py-2 border">{suggestion.email}</td>
+                <td className="px-4 py-2 border">{suggestion.tema}</td>
               </tr>
             ))}
           </tbody>

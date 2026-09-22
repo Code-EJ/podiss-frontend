@@ -1,44 +1,10 @@
-
-import React, { createContext, useState} from 'react';
-
-type AuthContextType = {
-  isLoggedIn: boolean;
-  login: (token: string) => void;
-  logout: () => void;
-  token: string | null;
-};
-
+import { createContext } from 'react';
+export interface AuthContextType {
+  isLoggedIn: boolean; isChecking: boolean; token: string | null;
+  login: (token: string, remember?: boolean) => Promise<void>; logout: () => void;
+}
+/** UI state is not an authorization boundary. @author oEnzoRibas */
 export const AuthContext = createContext<AuthContextType>({
-  isLoggedIn: false,
-  login: () => {},
-  logout: () => {},
-  token: null,
+  isLoggedIn: false, isChecking: true, token: null,
+  login: async () => { throw new Error('AuthProvider ausente.'); }, logout: () => {},
 });
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(() => {
-    return localStorage.getItem('token');
-  });
-
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    return !!localStorage.getItem('token');
-  });
-
-  const login = (newToken: string) => {
-    localStorage.setItem('token', newToken);
-    setToken(newToken);
-    setIsLoggedIn(true);
-  };
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
-    setIsLoggedIn(false);
-  };
-
-  return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout, token }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};

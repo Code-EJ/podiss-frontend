@@ -7,6 +7,10 @@ interface EpisodeCardProps {
   description: string;
 }
 
+/**
+ * Presentation-only legacy episode card; currently not mounted by application routes.
+ * @author oEnzoRibas
+ */
 const EpisodeCard: React.FC<EpisodeCardProps> = ({ image, title, description }) => {
   return (
     <div className="bg-gray-100 border border-gray-300 rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300">

@@ -1,68 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { MdDelete, MdAdd } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api';
+import api, { errorMessage } from '../../api';
+import { usePaginatedResource } from '../../hooks/use-paginated-resource';
+import { Pagination } from '../../components/pagination';
+import type { Episode } from '../../types/api';
 
-interface Episode {
-  id: string;
-  title: string;
-  description: string;
-  videoUrl: string;
-  createdAt: string;
-}
 
-const extractVideoId = (url: string): string | null => {
-  try {
-    const urlObj = new URL(url);
 
-    if (urlObj.hostname.includes('youtube.com') || urlObj.hostname.includes('youtu.be')) {
-      let videoId = '';
-
-      if (urlObj.hostname.includes('youtu.be')) {
-        videoId = urlObj.pathname.slice(1);
-      } else if (urlObj.hostname.includes('youtube.com')) {
-        videoId = urlObj.searchParams.get('v') || '';
-        if (!videoId && urlObj.pathname.includes('/embed/')) {
-          videoId = urlObj.pathname.split('/embed/')[1];
-        }
-      }
-      videoId = videoId.split(/[&?#]/)[0];
-      if (videoId && videoId.length === 11) {
-        return videoId;
-      } else {
-        const paths = urlObj.pathname.split('/');
-        for (const path of paths) {
-          if (path.length === 11) {
-            return path;
-          }
-        }
-      }
-    }
-    return null;
-  } catch (error) {
-    // Retornando null caso invalido
-    return null;
-  }
-};
-
+/**
+ * Lists episodes newest first with server pagination; deletion uses the internal UUID.
+ * @author oEnzoRibas
+ */
 const EpisodeListPage = () => {
-  const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const result = usePaginatedResource<Episode>('/episodes');
+  const { items: episodes, loading, error } = result;
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeEpisodeId, setActiveEpisodeId] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchEpisodes = async () => {
-      try {
-        const response = await api.get('/episodes');
-        setEpisodes(response.data.reverse());
-      } catch (error) {
-        console.error('Erro ao buscar episódios:', error);
-      }
-    };
-    fetchEpisodes();
-  }, []);
 
   const handleDelete = (episodeId: string) => {
     setActiveEpisodeId(episodeId);
@@ -70,14 +29,15 @@ const EpisodeListPage = () => {
   };
 
   const confirmDelete = async () => {
-    if (activeEpisodeId) {
+    if (activeEpisodeId && !busy) {
+      setBusy(true); setActionError(null);
       try {
         await api.delete(`/episodes/${activeEpisodeId}`);
-        setEpisodes((prev) => prev.filter((episode) => episode.id !== activeEpisodeId));
+        result.refresh();
         setIsModalOpen(false);
       } catch (error) {
-        console.error('Erro ao deletar episódio:', error);
-      }
+        setActionError(errorMessage(error));
+      } finally { setBusy(false); }
     }
   };
 
@@ -87,9 +47,12 @@ const EpisodeListPage = () => {
 
   return (
     <div className="p-8 bg-white min-h-screen">
+      {loading && <p role="status">Carregando...</p>}
+      {(error || actionError) && <p role="alert" className="text-red-600">{error || actionError}</p>}
+      <Pagination {...result} />
       <h1 className="text-3xl font-bold mb-6 text-gray-800">Episódios</h1>
 
-      {episodes.length === 0 ? (
+      {!loading && !error && episodes.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64 bg-white rounded-lg shadow-md text-center">
           <h2 className="text-xl text-gray-600 mb-4">Não possui vídeos, adicione um!</h2>
           <button
@@ -103,7 +66,7 @@ const EpisodeListPage = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {episodes.map((episode) => {
-            const videoId = extractVideoId(episode.videoUrl);
+            const videoId = episode.youtubeId;
 
             return (
               <div
@@ -130,7 +93,7 @@ const EpisodeListPage = () => {
                 </div>
                 <div className="p-2 flex justify-end">
                   <button
-                    onClick={() => handleDelete(episode.id)}
+                    aria-label="Excluir episódio" onClick={() => handleDelete(episode.id)}
                     className="text-red-500 hover:text-red-700 p-2 rounded-full transition-colors"
                   >
                     <MdDelete size="24" />
@@ -155,7 +118,7 @@ const EpisodeListPage = () => {
                 Cancelar
               </button>
               <button
-                onClick={confirmDelete}
+                disabled={busy} onClick={confirmDelete}
                 className="px-4 py-2 rounded bg-red-500 hover:bg-red-600 text-white"
               >
                 Excluir

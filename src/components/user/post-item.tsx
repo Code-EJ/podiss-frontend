@@ -2,20 +2,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaTags } from 'react-icons/fa';
-import { API_URL } from '../../database';
+import { API_URL } from '../../config';
 
-interface Post {
-  id: string;
-  title: string;
-  description: string;
-  tags: string;
-  createdAt: string;
-}
+import type { Post } from '../../types/api';
 
 interface PostItemProps {
   post: Post;
 }
 
+/**
+ * Displays a post summary; requests binary image data only when the API reports an image.
+ * @author oEnzoRibas
+ */
 const PostItem: React.FC<PostItemProps> = ({ post }) => {
 
   const formatDate = (dateString: string) => {
@@ -23,20 +21,20 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  
+
   const getPreview = (text: string, length: number) => {
     if (text.length <= length) return text;
     return text.slice(0, length) + '...';
   };
 
- 
+
   const getTags = (tags: string) => {
     return tags.split(',').map((tag) => tag.trim());
   };
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow duration-300">
-      <img src={`${ API_URL }/posts/image/${post.id}`}/>
+      {post.hasImage && <img alt={post.title} src={`${ API_URL }/posts/image/${post.id}`}/>}
       <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
       <p className="text-gray-600 mb-4">{getPreview(post.description, 100)}</p>
       <div className="flex items-center mb-4">

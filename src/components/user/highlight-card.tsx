@@ -7,6 +7,10 @@ interface HighlightCardProps {
   description: string;
 }
 
+/**
+ * Presentation-only legacy highlight card; currently not mounted by application routes.
+ * @author oEnzoRibas
+ */
 const HighlightCard: React.FC<HighlightCardProps> = ({ image, title, description }) => {
   return (
     <div className="bg-gray-100 border border-gray-300 rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300">

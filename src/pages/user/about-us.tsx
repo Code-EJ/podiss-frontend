@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * Preserves the project's existing Portuguese biography and editorial content.
+ * @author oEnzoRibas
+ */
 const AboutUs: React.FC = () => {
   return (
     <div className="font-sans">
@@ -50,15 +54,15 @@ const AboutUs: React.FC = () => {
       <section className="bg-white text-black py-12 px-6 sm:px-12 lg:px-32">
         <div className="text-lg leading-relaxed max-w-4xl mx-auto">
           <p className="mb-4">
-            Contudo, este podcast não é somente sobre casos engraçados ou sobre o jeito mineiro de dizer as coisas. Sou a criadora da ideia, nasci em Belo Horizonte, MG, amo meu país. 
+            Contudo, este podcast não é somente sobre casos engraçados ou sobre o jeito mineiro de dizer as coisas. Sou a criadora da ideia, nasci em Belo Horizonte, MG, amo meu país.
           </p>
           <p className="mb-4">
-            Sou filha, mãe de três filhos lindos, dois que ainda moram em Belo Horizonte, e uma menina que mora comigo nos Estados Unidos, mulher, amiga, companheira e feliz. Aprendo todos os dias a levar uma vida mais leve e suave. 
+            Sou filha, mãe de três filhos lindos, dois que ainda moram em Belo Horizonte, e uma menina que mora comigo nos Estados Unidos, mulher, amiga, companheira e feliz. Aprendo todos os dias a levar uma vida mais leve e suave.
           </p>
 
           <blockquote className="border-l-4 border-gray-400 p-4 mb-4">
             Sou professora de Português numa High School e lido o tempo todo com situações que eu mesma vivencio na pronúncia do inglês.
-            
+
           </blockquote>
 
           <p className="mb-4">

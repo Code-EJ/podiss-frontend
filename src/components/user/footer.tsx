@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * Renders existing editorial footer content unchanged; contact placeholders require an editorial decision.
+ * @author oEnzoRibas
+ */
 const Footer: React.FC = () => {
   return (
     <footer className="bg-gray-800 text-gray-300 py-8 text-center">

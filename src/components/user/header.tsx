@@ -5,6 +5,10 @@ interface HeaderProps {
   onToggleLoginModal: () => void;
 }
 
+/**
+ * Presentation-only legacy header with a caller-controlled login action.
+ * @author oEnzoRibas
+ */
 const Header: React.FC<HeaderProps> = ({ onToggleLoginModal }) => {
   return (
     <header className="bg-red-500 text-white flex justify-between items-center p-5 shadow-md">

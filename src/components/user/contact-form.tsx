@@ -1,46 +1,41 @@
 import React, { useState } from 'react';
-import ButtomForm from './buttom-form';
+import FormButton from './form-button';
 import TextField from './text-field';
-import { API_URL } from '../../database';
+import api, { errorMessage } from '../../api';
+import type { ContactPayload } from '../../types/api';
 
+/**
+ * Submits public contact data using legacy Portuguese wire keys. Failed requests preserve the user's input.
+ * @author oEnzoRibas
+ */
 const ContactForm: React.FC = () => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [subject, setSubject] = useState<string>('');
-  const [mensage, setMensage] = useState<string>('');
+  const [message, setMessage] = useState<string>('');
+
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (submitting) return;
+    setSubmitting(true); setError(null);
 
-    const contato = {
+    const contact: ContactPayload = {
       nome: name,
       email: email,
       assunto: subject,
-      mensagem: mensage
+      mensagem: message
     };
 
     try {
-      const response = await fetch(`${ API_URL }/contatos`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(contato)
-      });
-
-      if (response.ok) {
-        await response.json();
-        alert('Mensagem de contato enviada com sucesso!');
-        setName('');
-        setEmail('');
-        setSubject('');
-        setMensage('');
-      } else {
-        console.error('Erro ao enviar contato:', response.statusText);
-        alert('Ocorreu um erro ao enviar a mensagem de contato.');
-      }
-    } catch (error) {
-      console.error('Erro ao enviar contato:', error);
-      alert('Ocorreu um erro ao enviar a mensagem de contato.');
-    }
+      await api.post('/contatos', contact);
+      alert('Mensagem de contato enviada com sucesso!');
+      setName(''); setEmail('');
+      setSubject(''); setMessage('');
+    } catch (failure) { setError(errorMessage(failure)); }
+    finally { setSubmitting(false); }
   };
 
   return (
@@ -50,7 +45,7 @@ const ContactForm: React.FC = () => {
 
         <TextField
           required={true}
-          label="Nome"
+          label="Nome" maxLength={255}
           placeholder="Digite seu nome"
           value={name}
           onChange={value => setName(value)}
@@ -58,7 +53,7 @@ const ContactForm: React.FC = () => {
 
         <TextField
           required={true}
-          label="Email"
+          label="Email" type="email" maxLength={254}
           placeholder="Digite seu email"
           value={email}
           onChange={value => setEmail(value)}
@@ -66,7 +61,7 @@ const ContactForm: React.FC = () => {
 
         <TextField
           required={true}
-          label="Assunto"
+          label="Assunto" maxLength={255}
           placeholder="Digite o assunto"
           value={subject}
           onChange={value => setSubject(value)}
@@ -74,15 +69,16 @@ const ContactForm: React.FC = () => {
 
         <TextField
           required={true}
-          label="Mensagem"
+          label="Mensagem" maxLength={10000}
           placeholder="Digite a mensagem"
-          value={mensage}
-          onChange={value => setMensage(value)}
+          value={message}
+          onChange={value => setMessage(value)}
         />
 
-        <ButtomForm>
+        {error && <p role="alert" className="text-red-600">{error}</p>}
+        <FormButton disabled={submitting}>
           Manda pra nóis!
-        </ButtomForm>
+        </FormButton>
       </form>
     </section>
   );

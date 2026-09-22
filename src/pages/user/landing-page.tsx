@@ -1,6 +1,7 @@
 
-import React, { useState, useEffect } from 'react';
-import { API_URL } from '../../database';
+import React from 'react';
+import { usePaginatedResource } from '../../hooks/use-paginated-resource';
+import type { Episode } from '../../types/api';
 import UserNavbar from '../../components/user/user-navbar';
 import { ContainerVideo } from '../../components/user/container-video';
 import SuggestionForm from '../../components/user/suggestion-form';
@@ -8,48 +9,20 @@ import ContactForm from '../../components/user/contact-form';
 import Footer from '../../components/user/footer';
 
 
-interface Video {
-  id: string;
-  videoUrl: string;
-  title: string;
-  description: string;
-  createdAt: string; 
-}
 
-const UserInitialPetry: React.FC = () => {
-  const [videos, setVideos] = useState<Video[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchVideos = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`${ API_URL }/episodes`);
-        if (!response.ok) {
-          throw new Error('Falha ao buscar vídeos.');
-        }
-        const data: Video[] = await response.json();
-        const sortedVideos = data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        const recentVideos = sortedVideos.slice(0, 3);
-        setVideos(recentVideos);
-      } catch (err) {
-        console.error('Erro ao buscar vídeos:', err);
-        setError('Não foi possível carregar os vídeos.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchVideos();
-  }, []);
+/**
+ * Loads the three latest episodes and hosts public contact and suggestion forms.
+ * @author oEnzoRibas
+ */
+const LandingPage: React.FC = () => {
+  const result = usePaginatedResource<Episode>('/episodes', 3);
+  const { items: videos, loading: isLoading, error } = result;
 
   return (
     <div className="min-h-screen flex flex-col">
       <UserNavbar />
-      
-      <main className="flex-grow pt-28"> 
+
+      <main className="flex-grow pt-28">
         <section className="welcome-section bg-gray-100 py-12">
           <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 text-center">
             <h1 className="text-4xl sm:text-5xl font-bold text-white">Ô trem bão! Bem Vindo ao Podcast</h1>
@@ -65,6 +38,7 @@ const UserInitialPetry: React.FC = () => {
             {isLoading && <p className="text-center text-gray-500">Carregando vídeos...</p>}
             {error && <p className="text-center text-red-500">{error}</p>}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+              {!isLoading && !error && videos.length === 0 && <p>Nenhum episódio encontrado.</p>}
               {videos.map(video => (
                 <ContainerVideo key={video.id} {...video} />
               ))}
@@ -86,4 +60,4 @@ const UserInitialPetry: React.FC = () => {
   );
 };
 
-export default UserInitialPetry;
+export default LandingPage;
