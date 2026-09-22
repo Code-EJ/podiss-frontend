@@ -49,6 +49,8 @@ npm run build gera dist. VITE_API_URL precisa conter a URL HTTPS real confirmada
 
 Componentes, hooks e helpers possuem comentários TSDoc e créditos @author oEnzoRibas, preservando os direitos e créditos originais abaixo.
 
+Para mudar nomes da navbar, rotas, rodapé e módulos, siga o [guia de manutenção](docs/architecture/frontend-modules.md). A navbar é compartilhada por páginas públicas, login e painel; o [relatório de padronização](docs/ADRS/0004/reports/01-final-report.md) registra decisões e testes.
+
 ## Contributing
 
 This repository is maintained by Code Soluções em Tecnologia Júnior.

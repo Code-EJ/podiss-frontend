@@ -12,5 +12,8 @@ Créditos: oEnzoRibas. Os textos das páginas continuam em português; nomes de 
 - [Resultado e pendências da etapa 10](ADRS/0001/reports/10-final-audit.md)
 - [ADR de contratos e sessão](ADRS/0002-backend-contract-and-session.md)
 - [ADR de build e publicação](ADRS/0003-build-and-deployment.md)
+- [ADR de navegação global e módulos](ADRS/0004-shared-navigation.md)
+- [Onde alterar menus, textos e rotas](architecture/frontend-modules.md)
+- [Relatório final de padronização](ADRS/0004/reports/01-final-report.md)
 
 Não há migrations neste repositório. Banco, Flyway e criação de usuários pertencem ao backend.
