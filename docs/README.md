@@ -15,5 +15,8 @@ Créditos: oEnzoRibas. Os textos das páginas continuam em português; nomes de 
 - [ADR de navegação global e módulos](ADRS/0004-shared-navigation.md)
 - [Onde alterar menus, textos e rotas](architecture/frontend-modules.md)
 - [Relatório final de padronização](ADRS/0004/reports/01-final-report.md)
+- [ADR de UI, feedback e mídia](ADRS/0005-ui-feedback-and-media.md)
+- [Guia de componentes e edição de imagens](architecture/ui-feedback.md)
+- [Relatório final de UI e testes](ADRS/0005/reports/01-final-report.md)
 
 Não há migrations neste repositório. Banco, Flyway e criação de usuários pertencem ao backend.

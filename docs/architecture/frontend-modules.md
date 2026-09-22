@@ -41,4 +41,4 @@ Executar npm run check. navigation.test.tsx cobre shell nas rotas, sessão, menu
 
 Conferência manual: homepage → posts → detalhe → Entrá; abrir /admin sem sessão; testar menu em tela estreita, Escape, tabulação e resize; com ADMIN conferir Painel/Sair e sidebar. A navbar só mostra ação administrativa depois da confirmação do backend.
 
-Componentes legados de apresentação não montados não fazem parte do shell (header.tsx, section-navbar.tsx, highlight-card.tsx, episode-card.tsx). O footer.tsx antigo reapareceu por edição paralela e também não é montado; editar site-content.ts para mudar o rodapé ativo. Não voltar a usá-los como navegação paralela. Foram preservados nesta rodada, especialmente onde havia edição do usuário; remoção editorial/limpeza completa deve ser decisão explícita.
+Os componentes legados não montados foram removidos na ADR 0005, após conferir que não tinham consumidores. Edite site-content.ts para mudar o rodapé ativo. Cards públicos e administrativos agora são compartilhados em components/content; consulte o [guia de UI e feedback](ui-feedback.md).

@@ -53,6 +53,8 @@ Para mudar nomes da navbar, rotas, rodapé e módulos, siga o [guia de manutenç
 
 ## Contributing
 
+Para componentes, feedback e correção da foto ao editar posts, consulte o [guia de UI](docs/architecture/ui-feedback.md) e o [relatório de validação](docs/ADRS/0005/reports/01-final-report.md).
+
 This repository is maintained by Code Soluções em Tecnologia Júnior.
 
 Access to the source code does not grant permission to copy, modify, distribute, sublicense, publish, or otherwise use the software outside the scope expressly authorized by Code Soluções em Tecnologia Júnior or the applicable project agreement.
