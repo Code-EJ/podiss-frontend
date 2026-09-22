@@ -1,3 +1,4 @@
+import { Button } from './ui/button';
 /** Keyboard-accessible server-side pagination. @author oEnzoRibas */
 export function Pagination({
   page,
@@ -14,25 +15,25 @@ export function Pagination({
   return (
     <nav
       aria-label="Paginação"
-      className="flex justify-center items-center gap-4 my-6"
+      className="flex flex-wrap justify-center items-center gap-3 my-6"
     >
-      <button
+      <Button variant="secondary"
         className="border rounded px-3 py-2 disabled:opacity-50"
         disabled={loading || page === 0}
         onClick={() => setPage(page - 1)}
       >
         Anterior
-      </button>
+      </Button>
       <span aria-live="polite">
         Página {page + 1} de {totalPages}
       </span>
-      <button
+      <Button variant="secondary"
         className="border rounded px-3 py-2 disabled:opacity-50"
         disabled={loading || page >= totalPages - 1}
         onClick={() => setPage(page + 1)}
       >
         Próxima
-      </button>
+      </Button>
     </nav>
   );
 }

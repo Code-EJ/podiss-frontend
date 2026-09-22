@@ -2,6 +2,10 @@ import axios from 'axios';
 import { API_URL } from './config';
 import { clearSession, readToken } from './auth-session';
 import type { ApiProblem } from './types/api';
+import { activity } from './feedback/activity';
+
+const pendingRequests = new WeakMap<object, () => void>();
+function finishRequest(config?: object) { if (config) { pendingRequests.get(config)?.(); pendingRequests.delete(config); } }
 
 /** Bounded transport; public requests do not inherit stored credentials. @author oEnzoRibas */
 const api = axios.create({ baseURL: API_URL, timeout: 15000 });
@@ -14,9 +18,11 @@ api.interceptors.request.use(config => {
     || (method === 'post' && ['/api/auth/login', '/contatos', '/sugestoes'].includes(path));
   const token = readToken();
   if (!isPublic && token && !config.headers.Authorization) config.headers.Authorization = `Bearer ${token}`;
+  pendingRequests.set(config, activity.begin());
   return config;
 });
-api.interceptors.response.use(response => response, (error: unknown) => {
+api.interceptors.response.use(response => { finishRequest(response.config); return response; }, (error: unknown) => {
+  if (axios.isAxiosError(error)) finishRequest(error.config);
   if (axios.isAxiosError(error) && error.response?.status === 401) {
     const sent = error.config?.headers?.Authorization;
     if (sent && sent === `Bearer ${readToken()}`) clearSession();

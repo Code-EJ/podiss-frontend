@@ -29,7 +29,7 @@ const TextField : React.FC<TextFieldProps> = (props) => {
                 onChange={onTyping}
                 required={props.required}
                 placeholder={props.placeholder}
-                className="mb-4 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="mb-4 w-full min-w-0 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-300"
             />
         </div>
     );

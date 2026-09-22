@@ -4,12 +4,15 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { AuthProvider } from './auth-provider';
 import App from './app';
+import { MotionConfig } from 'motion/react';
+import { FeedbackCenter } from './components/feedback/feedback-center';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AuthProvider>
+    <MotionConfig reducedMotion="user"><AuthProvider>
       <App />
-    </AuthProvider>
+      <FeedbackCenter />
+    </AuthProvider></MotionConfig>
   </React.StrictMode>
 );
