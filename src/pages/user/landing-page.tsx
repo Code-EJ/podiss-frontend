@@ -1,12 +1,11 @@
+import { apiPaths } from '../../services/api-paths';
 
 import React from 'react';
 import { usePaginatedResource } from '../../hooks/use-paginated-resource';
 import type { Episode } from '../../types/api';
-import UserNavbar from '../../components/user/user-navbar';
 import { ContainerVideo } from '../../components/user/container-video';
 import SuggestionForm from '../../components/user/suggestion-form';
 import ContactForm from '../../components/user/contact-form';
-import Footer from '../../components/user/footer';
 
 
 
@@ -15,14 +14,11 @@ import Footer from '../../components/user/footer';
  * @author oEnzoRibas
  */
 const LandingPage: React.FC = () => {
-  const result = usePaginatedResource<Episode>('/episodes', 3);
+  const result = usePaginatedResource<Episode>(apiPaths.episodes, 3);
   const { items: videos, loading: isLoading, error } = result;
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <UserNavbar />
-
-      <main className="flex-grow pt-28">
+    <div>
         <section className="welcome-section bg-gray-100 py-12">
           <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 text-center">
             <h1 className="text-4xl sm:text-5xl font-bold text-white">Ô trem bão! Bem Vindo ao Podcast</h1>
@@ -53,9 +49,6 @@ const LandingPage: React.FC = () => {
             <ContactForm />
           </div>
         </div>
-      </main>
-
-      <Footer/>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { apiPaths } from './services/api-paths';
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import api from './api';
 import { AuthContext } from './auth-context';
@@ -17,7 +18,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!token) { setVerifiedToken(null); setChecking(false); return; }
     const controller = new AbortController(); setChecking(true);
-    api.get('/contatos', { params: { page: 0, size: 1 }, signal: controller.signal,
+    api.get(apiPaths.contacts, { params: { page: 0, size: 1 }, signal: controller.signal,
       headers: { Authorization: `Bearer ${token}` } })
       .then(() => { if (!controller.signal.aborted) setVerifiedToken(token); })
       .catch(() => { if (!controller.signal.aborted) { setVerifiedToken(null); clearSession(); } })
@@ -26,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => { controller.abort(); window.clearTimeout(timer); };
   }, [token]);
   const login = useCallback(async (candidate: string, remember = false) => {
-    await api.get('/contatos', { params: { page: 0, size: 1 }, headers: { Authorization: `Bearer ${candidate}` } });
+    await api.get(apiPaths.contacts, { params: { page: 0, size: 1 }, headers: { Authorization: `Bearer ${candidate}` } });
     saveSession(candidate, remember); setVerifiedToken(candidate);
   }, []);
   return <AuthContext.Provider value={{ token, isChecking, isLoggedIn: Boolean(token && verifiedToken === token),

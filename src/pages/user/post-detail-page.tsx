@@ -1,10 +1,12 @@
+import { apiPaths, postImageUrl } from '../../services/api-paths';
+import { parseTags } from '../../domain/post';
+import { formatDate } from '../../domain/display';
 // src/pages/PostDetailPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useParams} from 'react-router-dom';
 import api, { errorMessage } from '../../api';
 import type { Post } from '../../types/api';
 import { FaTags} from 'react-icons/fa';
-import { API_URL } from '../../config';
 
 
 /**
@@ -23,7 +25,7 @@ const PostDetailPage: React.FC = () => {
       if (!id) return;
       setLoading(true); setError(null); setPost(null);
       try {
-        const response = await api.get<Post>(`/posts/${encodeURIComponent(id)}`, { signal: controller.signal });
+        const response = await api.get<Post>(apiPaths.post(id), { signal: controller.signal });
         setPost(response.data);
       } catch (err) {
         if (!controller.signal.aborted) setError(errorMessage(err));
@@ -49,26 +51,19 @@ const PostDetailPage: React.FC = () => {
   }
 
 
-  const getTags = (tags: string) => {
-    return tags.split(',').filter(Boolean).map((tag) => tag.trim());
-  };
 
 
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
 
   return (
     <div className="container mx-auto p-4">
       <div className="bg-white rounded-lg shadow-md p-6">
-      {post.hasImage && <img alt={post.title} className='h-48 w-50 mx-auto ' src={`${ API_URL }/posts/image/${post.id}`}/>}
+      {post.hasImage && <img alt={post.title} className='h-48 w-50 mx-auto ' src={postImageUrl(post.id)}/>}
         <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
-        <p className="text-gray-500 mb-2">{formatDate(post.createdAt)}</p>
+        <p className="text-gray-500 mb-2">{formatDate(post.createdAt, true)}</p>
         <div className="flex items-center mb-4">
           <FaTags className="text-gray-500 mr-2" />
           <div className="flex flex-wrap gap-2">
-            {getTags(post.tags).map((tag, index) => (
+            {parseTags(post.tags).map((tag, index) => (
               <span key={index} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
                 {tag}
               </span>

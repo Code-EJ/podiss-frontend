@@ -1,3 +1,4 @@
+import { apiPaths } from '../../services/api-paths';
 import React, { useState } from 'react';
 import FormButton from './form-button';
 import TextField from './text-field';
@@ -30,7 +31,7 @@ const ContactForm: React.FC = () => {
     };
 
     try {
-      await api.post('/contatos', contact);
+      await api.post(apiPaths.contacts, contact);
       alert('Mensagem de contato enviada com sucesso!');
       setName(''); setEmail('');
       setSubject(''); setMessage('');

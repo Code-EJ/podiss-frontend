@@ -1,3 +1,4 @@
+import { apiPaths } from '../../services/api-paths';
 import React, { useState } from 'react';
 import FormButton from './form-button';
 import TextField from './text-field';
@@ -28,7 +29,7 @@ const SuggestionForm: React.FC = () => {
     };
 
     try {
-      await api.post('/sugestoes', suggestion);
+      await api.post(apiPaths.suggestions, suggestion);
       alert('Sugestão enviada com sucesso! Obrigado por contribuir!');
       setName(''); setEmail('');
       setTheme('');

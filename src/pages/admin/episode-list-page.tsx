@@ -1,3 +1,6 @@
+import { apiPaths } from '../../services/api-paths';
+import { routes } from '../../navigation/routes';
+import { isYouTubeId, youtubeEmbedUrl } from '../../domain/youtube';
 import { useState } from 'react';
 
 import { MdDelete, MdAdd } from 'react-icons/md';
@@ -14,7 +17,7 @@ import type { Episode } from '../../types/api';
  * @author oEnzoRibas
  */
 const EpisodeListPage = () => {
-  const result = usePaginatedResource<Episode>('/episodes');
+  const result = usePaginatedResource<Episode>(apiPaths.episodes);
   const { items: episodes, loading, error } = result;
   const [actionError, setActionError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -32,7 +35,7 @@ const EpisodeListPage = () => {
     if (activeEpisodeId && !busy) {
       setBusy(true); setActionError(null);
       try {
-        await api.delete(`/episodes/${activeEpisodeId}`);
+        await api.delete(apiPaths.episode(activeEpisodeId));
         result.refresh();
         setIsModalOpen(false);
       } catch (error) {
@@ -42,7 +45,7 @@ const EpisodeListPage = () => {
   };
 
   const handleAddEpisode = () => {
-    navigate('/admin/create-episode');
+    navigate(routes.createEpisode);
   };
 
   return (
@@ -73,11 +76,11 @@ const EpisodeListPage = () => {
                 key={episode.id}
                 className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col"
               >
-                {videoId ? (
+                {isYouTubeId(videoId) ? (
                   <iframe
                     width="100%"
                     height="200"
-                    src={`https://www.youtube.com/embed/${videoId}`}
+                    src={youtubeEmbedUrl(videoId)}
                     title={episode.title}
                     className="rounded-t-lg"
                     allowFullScreen
@@ -106,7 +109,7 @@ const EpisodeListPage = () => {
       )}
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 z-50 bg-gray-600 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-4 rounded-lg shadow-lg z-10">
             <h2 className="font-bold text-lg mb-4">Confirmar Exclusão</h2>
             <p>Tem certeza de que deseja excluir este episódio?</p>

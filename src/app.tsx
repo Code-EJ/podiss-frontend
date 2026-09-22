@@ -1,74 +1,46 @@
-// App.tsx
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
-import UserLayout from './layouts/user/user-layout';
-import UserHomePage from './pages/user/user-homepage';
-import { VideoPlayerPage } from './pages/user/video-player-page';
-import AdminLoginPage from './pages/admin/login-page';
-
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { SiteLayout } from './layouts/site-layout';
 import AdminLayout from './layouts/admin/admin-layout';
-import CreatePostPage from './pages/admin/create-post-page';
-
-import CreateEpisodePage from './pages/admin/create-episode-page';
-import ListPostPage from './pages/admin/list-post-page';
 import RequireAuth from './require-auth';
-import EpisodeListPage from './pages/admin/episode-list-page';
+import LandingPage from './pages/user/landing-page';
+import UserHomePage from './pages/user/user-homepage';
 import PostListPage from './pages/user/user-list-post-page';
 import PostDetailPage from './pages/user/post-detail-page';
-import UserEpisodes from './pages/user/user-homepage';
-import LandingPage from './pages/user/landing-page';
 import AboutUs from './pages/user/about-us';
+import { VideoPlayerPage } from './pages/user/video-player-page';
+import AdminLoginPage from './pages/admin/login-page';
+import CreatePostPage from './pages/admin/create-post-page';
+import CreateEpisodePage from './pages/admin/create-episode-page';
+import ListPostPage from './pages/admin/list-post-page';
+import EpisodeListPage from './pages/admin/episode-list-page';
 import SuggestionListPage from './pages/admin/suggestion-list-page';
 import MessageListPage from './pages/admin/message-list-page';
+import { NotFoundPage } from './components/shared/not-found-page';
+import { legacyRedirects, routes } from './navigation/routes';
 
-
-/**
- * Defines public and administrator routes. English route names preserve legacy URLs through redirects.
- * @author oEnzoRibas
- */
-const App: React.FC = () => {
-  return (
-    <Router>
-      <Routes>
-
-        <Route path="/" element={<LandingPage />} />
-
-        <Route path="/home" element={<UserLayout />}>
-          <Route path="about" element={<AboutUs />} />
-          <Route path="sobre-nos" element={<Navigate to="/home/about" replace />} />
-          <Route index element={<UserHomePage />} />
-          <Route path="episodes" element={<UserEpisodes />} />
-          <Route path="posts" element={<PostListPage />} />
-
-        </Route>
-
-        {/* Adicionar a rota "/video/:id" no nível superior */}
-        <Route path="/video/:id" element={<VideoPlayerPage />} />
-        <Route path="/posts/:id" element={<PostDetailPage />} />
-
-        <Route path="admin/login" element={<AdminLoginPage />} />
-        <Route
-          path="/admin/*"
-          element={
-            <RequireAuth>
-              <AdminLayout />
-            </RequireAuth>
-          }
-        >
-          <Route index element={<ListPostPage />} />
-          <Route path="create-post" element={<CreatePostPage />} />
-          <Route path="create-episode" element={<CreateEpisodePage />} />
-          <Route path="episodes-admin" element={<EpisodeListPage />} />
-          <Route path="suggestions" element={<SuggestionListPage />} />
-          <Route path="messages" element={<MessageListPage />} />
-          <Route path="sugestoes-admin" element={<Navigate to="/admin/suggestions" replace />} />
-          <Route path="mensagens-admin" element={<Navigate to="/admin/messages" replace />} />
-          <Route path="*" element={<p>Página não encontrada. <Link to="/admin">Voltar ao painel</Link></p>} />
-        </Route>
-        <Route path="*" element={<p>Página não encontrada. <Link to="/">Voltar ao início</Link></p>} />
-      </Routes>
-    </Router>
-  );
-};
-
-export default App;
+/** Composes shared chrome, public routes and the server-verified administrator boundary. @author oEnzoRibas */
+export default function App() {
+  return <BrowserRouter><Routes>
+    <Route element={<SiteLayout />}>
+      <Route path={routes.home} element={<LandingPage />} />
+      <Route path={routes.publicHome} element={<UserHomePage />} />
+      <Route path={routes.episodes} element={<UserHomePage />} />
+      <Route path={routes.posts} element={<PostListPage />} />
+      <Route path={routes.about} element={<AboutUs />} />
+      <Route path={routes.videoPattern} element={<VideoPlayerPage />} />
+      <Route path={routes.postPattern} element={<PostDetailPage />} />
+      <Route path={routes.login} element={<AdminLoginPage />} />
+      <Route element={<RequireAuth><AdminLayout /></RequireAuth>}>
+        <Route path={routes.admin} element={<ListPostPage />} />
+        <Route path={routes.createPost} element={<CreatePostPage />} />
+        <Route path={routes.createEpisode} element={<CreateEpisodePage />} />
+        <Route path={routes.adminEpisodes} element={<EpisodeListPage />} />
+        <Route path={routes.suggestions} element={<SuggestionListPage />} />
+        <Route path={routes.messages} element={<MessageListPage />} />
+        <Route path={`${routes.admin}/*`} element={<NotFoundPage admin />} />
+      </Route>
+      {legacyRedirects.map(({ from, to }) => <Route key={from} path={from} element={<Navigate to={to} replace />} />)}
+      <Route path="*" element={<NotFoundPage />} />
+    </Route>
+  </Routes></BrowserRouter>;
+}

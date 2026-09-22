@@ -1,3 +1,4 @@
+import { apiPaths } from '../../services/api-paths';
 // pages/user/user-homepage.tsx
 import React from 'react';
 import { ContainerVideo } from '../../components/user/container-video';
@@ -11,7 +12,7 @@ import type { Episode } from '../../types/api';
  * @author oEnzoRibas
  */
 const UserEpisodes: React.FC = () => {
-  const result = usePaginatedResource<Episode>('/episodes', 20);
+  const result = usePaginatedResource<Episode>(apiPaths.episodes, 20);
   const { items: videos, loading: isLoading, error } = result;
 
   return (

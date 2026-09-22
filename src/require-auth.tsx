@@ -1,3 +1,4 @@
+import { routes } from './navigation/routes';
 // src/require-auth.tsx
 import React, { useContext } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
@@ -17,7 +18,7 @@ const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
 
   if (isChecking) return <p role="status">Verificando sessão...</p>;
   if (!isLoggedIn) {
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+    return <Navigate to={routes.login} state={{ from: location }} replace />;
   }
 
   return children;

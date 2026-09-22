@@ -1,3 +1,4 @@
+import { apiPaths } from '../../services/api-paths';
 import React from 'react';
 import { usePaginatedResource } from '../../hooks/use-paginated-resource';
 import { Pagination } from '../../components/pagination';
@@ -5,7 +6,7 @@ import type { SuggestionResponse } from '../../types/api';
 
 /** Protected paginated inbox; Portuguese properties match the HTTP contract. @author oEnzoRibas */
 const SuggestionListPage: React.FC = () => {
-  const result = usePaginatedResource<SuggestionResponse>('/sugestoes');
+  const result = usePaginatedResource<SuggestionResponse>(apiPaths.suggestions);
   const { items: suggestions, loading, error } = result;
   if (loading) return <p role="status">Carregando...</p>;
   if (error) return <p role="alert" className="text-red-600">{error}</p>;

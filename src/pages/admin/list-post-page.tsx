@@ -1,3 +1,6 @@
+import { apiPaths } from '../../services/api-paths';
+import { siteContent } from '../../content/site-content';
+import { formatDate } from '../../domain/display';
 // src/pages/admin/ListPostPage.tsx
 import React, { useState } from 'react';
 import { MdEdit, MdDelete } from 'react-icons/md';
@@ -15,7 +18,7 @@ import { PostImageEditor } from '../../components/admin/post-image-editor';
  * @author oEnzoRibas
  */
 const ListPostPage: React.FC = () => {
-  const result = usePaginatedResource<Post>('/posts');
+  const result = usePaginatedResource<Post>(apiPaths.posts);
   const { items: posts, loading, error } = result;
   const [actionError, setActionError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -34,7 +37,7 @@ const ListPostPage: React.FC = () => {
     if (activePostId && !busy) {
       setBusy(true); setActionError(null);
       try {
-        await api.delete(`/posts/${activePostId}`);
+        await api.delete(apiPaths.post(activePostId));
         result.refresh();
         setIsModalOpen(false);
       } catch (error) {
@@ -52,7 +55,7 @@ const ListPostPage: React.FC = () => {
     if (editedPost && !busy) {
       setBusy(true); setActionError(null);
       try {
-        await api.put(`/posts/${editedPost.id}`, {
+        await api.put(apiPaths.post(editedPost.id), {
           title: editedPost.title,
           description: editedPost.description,
           tags: parseTags(editedPost.tags),
@@ -72,7 +75,7 @@ const ListPostPage: React.FC = () => {
       {!loading && !error && posts.length === 0 && <p>Nenhum post encontrado.</p>}
       <Pagination {...result} />
       <div className="bg-white rounded-lg p-6 shadow-md text-center mb-8">
-        <h1 className="text-2xl font-semibold text-gray-800">Seja bem-vinda, Yolanda!</h1>
+        <h1 className="text-2xl font-semibold text-gray-800">{siteContent.adminHeading}</h1>
         <p className="text-gray-500">Postagens Recentes:</p>
       </div>
       <div className="bg-white p-6 overflow-y-auto max-h-[calc(100vh-150px)]">
@@ -82,7 +85,7 @@ const ListPostPage: React.FC = () => {
               <div className="flex-1">
                 <h2 className="text-xl font-semibold text-gray-800 mb-1">{post.title}</h2>
                 <p className="text-gray-500 text-sm mb-2">
-                  {new Date(post.createdAt!).toLocaleDateString("pt-BR")}
+                  {formatDate(post.createdAt)}
                 </p>
                 <p className="text-gray-600">
                   {post.description.length > 50
@@ -111,7 +114,7 @@ const ListPostPage: React.FC = () => {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 z-50 bg-gray-600 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-4 rounded-lg shadow-lg z-10">
             <h2 className="font-bold text-lg mb-4">Confirmar Exclusão</h2>
             <p>Tem certeza de que deseja excluir este post?</p>
@@ -123,7 +126,7 @@ const ListPostPage: React.FC = () => {
         </div>
       )}
       {isEditModalOpen && editedPost && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 z-50 bg-gray-600 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg z-10 w-96">
             <h2 className="font-bold text-lg mb-4">Editar Post</h2>
             <div className="mb-4">

@@ -1,7 +1,8 @@
+import { apiPaths } from '../../services/api-paths';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api, { errorMessage } from '../../api';
-import UserNavbar from '../../components/user/user-navbar';
+import { isYouTubeId, youtubeEmbedUrl } from '../../domain/youtube';
 
 type VideoPlayerPageParams = {
   id: string;
@@ -33,8 +34,8 @@ export function VideoPlayerPage() {
     setLoading(true); setError(null);
     const fetchVideoData = async () => {
       try {
-        if (!id || !/^[A-Za-z0-9_-]{11}$/.test(id)) throw new Error('Episódio inválido.');
-        const response = await api.get<VideoData>(`/episodes/${id}`, { signal: controller.signal });
+        if (!id || !isYouTubeId(id)) throw new Error('Episódio inválido.');
+        const response = await api.get<VideoData>(apiPaths.episode(id), { signal: controller.signal });
         const data = response.data;
         setVideoData({
           title: data.title,
@@ -55,14 +56,13 @@ export function VideoPlayerPage() {
   return (
 
     <div className="flex flex-col items-center justify-center py-5">
-      <UserNavbar/>
-      <h2 className="text-zinc-950 text-2xl font-bold mb-2 pt-28">{videoData.title}</h2>
+      <h2 className="text-zinc-950 text-2xl font-bold mb-2">{videoData.title}</h2>
       <div className="w-full max-w-4xl p-5 rounded-lg">
         <iframe
           className="w-full h-96 mb-4"
           width="70%"
           height="500px"
-          src={`https://www.youtube.com/embed/${id}`}
+          src={youtubeEmbedUrl(id!)}
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen>

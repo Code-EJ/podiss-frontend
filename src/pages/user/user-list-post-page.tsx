@@ -1,3 +1,8 @@
+import { apiPaths } from '../../services/api-paths';
+import { Link } from 'react-router-dom';
+import { routes } from '../../navigation/routes';
+import { parseTags } from '../../domain/post';
+import { formatDate } from '../../domain/display';
 
 import React from 'react';
 import { usePaginatedResource } from '../../hooks/use-paginated-resource';
@@ -11,7 +16,7 @@ import type { Post } from '../../types/api';
  * @author oEnzoRibas
  */
 const PostListPage: React.FC = () => {
-  const result = usePaginatedResource<Post>('/posts');
+  const result = usePaginatedResource<Post>(apiPaths.posts);
   const { items: posts, loading, error } = result;
 
   if (loading) {
@@ -34,17 +39,17 @@ const PostListPage: React.FC = () => {
         {posts.map((post) => (
           <div key={post.id} className="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col">
             <h2 className="text-2xl font-semibold text-gray-800 mb-2 text-center">{post.title}</h2>
-            <p className="text-sm text-gray-500 mb-4">{new Date(post.createdAt).toLocaleDateString()}</p>
+            <p className="text-sm text-gray-500 mb-4">{formatDate(post.createdAt)}</p>
             <p className="text-gray-700 mb-4">{post.description}</p>
             <div className="text-sm text-gray-600 mb-4">
               <span className="font-semibold">Categorias: </span>
-              {post.tags.split(',').filter(Boolean).map((tag) => (
+              {parseTags(post.tags).map((tag) => (
                 <span key={tag} className="inline-block bg-purple-200 text-purple-800 px-2 py-1 rounded-full mr-2">
                   {tag.trim()}
                 </span>
               ))}
             </div>
-            <a href={`/posts/${post.id}`} className="text-red-600 font-semibold text-center">SAIBA MAIS {">>"}</a>
+            <Link to={routes.post(post.id)} className="text-red-600 font-semibold text-center">SAIBA MAIS {">>"}</Link>
           </div>
         ))}
       </div>

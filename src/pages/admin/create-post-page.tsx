@@ -1,3 +1,4 @@
+import { apiPaths } from '../../services/api-paths';
 import { FormEvent, useState, useRef } from 'react';
 import api, { errorMessage } from '../../api';
 import { postForm } from '../../domain/post';
@@ -31,7 +32,7 @@ const CreatePostPage = () => {
         setSubmitting(true);
 
         try {
-            const response = await api.post<Post>('/posts', postForm(title, description, categories, file));
+            const response = await api.post<Post>(apiPaths.posts, postForm(title, description, categories, file));
 
             alert(`Post Criado!\nTítulo: ${response.data.title}\nDescrição: ${response.data.description}`);
             setTitle('');

@@ -1,3 +1,4 @@
+import { apiPaths } from '../../services/api-paths';
 import { useRef, useState } from 'react';
 import api, { errorMessage } from '../../api';
 import { postForm } from '../../domain/post';
@@ -15,13 +16,13 @@ export function PostImageEditor({ postId, onChanged }: { postId: string; onChang
     if (busy) return;
     setBusy(true); setError(null);
     try {
-      if (remove) await api.delete(`/posts/${postId}/image`);
+      if (remove) await api.delete(apiPaths.postImage(postId));
       else {
         const image = input.current?.files?.[0];
         if (!image) throw new Error('Selecione uma imagem.');
         const validated = postForm('', '', [], image);
         validated.delete('title'); validated.delete('description');
-        await api.put(`/posts/${postId}/image`, validated);
+        await api.put(apiPaths.postImage(postId), validated);
       }
       if (input.current) input.current.value = '';
       onChanged();

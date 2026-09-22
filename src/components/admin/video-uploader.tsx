@@ -1,3 +1,4 @@
+import { apiPaths } from '../../services/api-paths';
 import { useState } from "react";
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import api, { errorMessage } from "../../api";
@@ -27,7 +28,7 @@ export function VideoUploader({ onVideoAdded }: VideoUploaderProps) {
 
         setSubmitting(true); setError(null);
         try {
-            const response = await api.post<Episode>('/episodes', {
+            const response = await api.post<Episode>(apiPaths.episodes, {
                 videoUrl: videoUrl
             });
 

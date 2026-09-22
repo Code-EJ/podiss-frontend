@@ -1,3 +1,5 @@
+import { apiPaths } from '../../services/api-paths';
+import { adminReturnPath } from '../../navigation/routes';
 // src/pages/admin/AdminLoginPage.tsx
 import React, { useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -25,8 +27,7 @@ const AdminLoginPage: React.FC = () => {
 
   // Pega aquela rota original que o usuário tentou acessar
   const state = location.state as { from?: { pathname?: string } } | null;
-  const target = state?.from?.pathname ?? '/admin';
-  const from = /^\/admin(?:\/[a-z-]+)*$/.test(target) ? target : '/admin';
+  const from = adminReturnPath(state?.from?.pathname);
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,7 +35,7 @@ const AdminLoginPage: React.FC = () => {
     if (submitting) return;
     setSubmitting(true); setError(null);
     try {
-      const response = await api.post<{ token: string }>('/api/auth/login', { username, password });
+      const response = await api.post<{ token: string }>(apiPaths.login, { username, password });
       const token = response.data.token;
       await login(token, rememberMe);
       navigate(from, { replace: true });
@@ -44,7 +45,7 @@ const AdminLoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-red-700 to-red-500">
+    <div className="flex items-center justify-center py-12 bg-gradient-to-r from-red-700 to-red-500">
       <div className="bg-white rounded-lg shadow-lg p-8 w-96">
         <h1 className="text-2xl font-bold text-center mb-6">Admin Login</h1>
         <form onSubmit={handleSubmit}>

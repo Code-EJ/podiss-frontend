@@ -1,3 +1,4 @@
+import { routes } from '../../navigation/routes';
 
 import { useNavigate } from 'react-router-dom';
 import { VideoUploader } from '../../components/admin/video-uploader';
@@ -8,7 +9,7 @@ import { VideoUploader } from '../../components/admin/video-uploader';
  */
 const CreateEpisodePage = () => {
   const navigate = useNavigate();
-  const handleVideoAdded = () => navigate('/admin/episodes-admin');
+  const handleVideoAdded = () => navigate(routes.adminEpisodes);
 
   return (
     <div className="container mx-auto px-4 py-8">
