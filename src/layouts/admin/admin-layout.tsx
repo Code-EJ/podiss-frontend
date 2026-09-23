@@ -1,20 +1,10 @@
-
 import { Outlet } from 'react-router-dom';
-import SidebarAdmin from '../../components/admin/side-bar-admin';
+import AdminSidebar from '../../components/admin/admin-sidebar';
 
-
-const AdminLayout = () => {
-  return (
-    <div className="flex">
-      {/* Sidebar específica do administrador */}
-      <SidebarAdmin />
-
-      {/* Conteúdo principal do admin */}
-      <div className="flex-1 bg-white min-h-screen">
-        <Outlet />
-      </div>
-    </div>
-  );
-};
-
-export default AdminLayout;
+/** Adds panel-specific navigation without duplicating the site header, footer or main landmark. @author oEnzoRibas */
+export default function AdminLayout() {
+  return <div className="flex flex-col lg:flex-row">
+    <AdminSidebar />
+    <div className="min-w-0 flex-1 overflow-x-auto bg-white"><Outlet /></div>
+  </div>;
+}

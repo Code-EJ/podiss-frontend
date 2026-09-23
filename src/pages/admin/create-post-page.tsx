@@ -1,10 +1,19 @@
-import React, { FormEvent, useState, useContext } from 'react';
-import axios from 'axios';
-import { API_URL } from '../../database';
-import { AuthContext } from '../../auth-context';
+import { contentService } from '../../services/content-service';
+import { useAsyncAction } from '../../hooks/use-async-action';
+import { Button } from '../../components/ui/button';
+import { Alert } from '../../components/ui/alert';
+import { Badge } from '../../components/ui/badge';
+import { FormEvent, useState, useRef } from 'react';
 
+
+
+/**
+ * Creates editorial content as multipart fields. Tags are repeated fields; image is optional and bounded.
+ * @author oEnzoRibas
+ */
 const CreatePostPage = () => {
-    const { token } = useContext(AuthContext); // Pegamos o token do contexto
+    const fileInput = useRef<HTMLInputElement>(null);
+    const { busy: submitting, error: actionError, run } = useAsyncAction();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [categories, setCategories] = useState<string[]>([]);
@@ -13,6 +22,7 @@ const CreatePostPage = () => {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (submitting) return;
 
         if (!title.trim() || !description.trim()) {
             setError('Por favor, preencha todos os campos.');
@@ -21,38 +31,19 @@ const CreatePostPage = () => {
 
         setError('');
 
-        try {
-            const formData = new FormData();
-
-            if (file) {
-                formData.append('image', file);
-            }
-
-            formData.append('title', title);
-            formData.append('description', description);
-            formData.append('tags', JSON.stringify(categories).slice(1, -1));
-
-            const config = {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}`
-                },
-            };
-
-            const response = await axios.post(API_URL  + '/posts', formData, config);
-            
-            alert(`Post Criado!\nTítulo: ${response.data.title}\nDescrição: ${response.data.description}`);
-            setTitle('');
-            setFile(undefined);
-            setDescription('');
-            setCategories([]);
-        } catch (error) {
-            console.error('Erro ao criar post:', error);
-            setError('Falha ao criar post.');
+        const result = await run(() => contentService.createPost(title, description, categories, file), {
+            loading: 'Criando post...', success: 'Post criado com sucesso!',
+        });
+        if (result.ok) {
+            setTitle(''); setFile(undefined); setDescription(''); setCategories([]);
+            if (fileInput.current) fileInput.current.value = '';
         }
     };
 
     const addCategory = (category: string) => {
+        if (category.length > 80 || category.includes(',') || categories.length >= 20) {
+            setError('Use até 20 categorias, com até 80 caracteres e sem vírgulas.'); return;
+        }
         if (category && !categories.includes(category)) {
             setCategories(prev => [...prev, category]);
         }
@@ -61,17 +52,18 @@ const CreatePostPage = () => {
     const removeCategory = (category: string) => {
         setCategories(prev => prev.filter(c => c !== category));
     };
-   
+
     return (
-        <div className="p-8">
+        <div className="px-4 py-8 sm:px-6">
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-3xl font-bold text-gray-800 mb-6">Criar Novo Post</h1>
-                <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg">
+                <form onSubmit={handleSubmit} className="bg-white p-5 sm:p-8 rounded-xl border border-gray-200 shadow-sm">
+                    <fieldset disabled={submitting} className="min-w-0">
                     <div className="mb-6">
                         <label htmlFor="title" className="block text-gray-700 text-lg font-semibold mb-2">Título:</label>
                         <input
                             type="text"
-                            id="title"
+                            id="title" required maxLength={255}
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -84,14 +76,14 @@ const CreatePostPage = () => {
                         <div className="flex mb-2 flex-wrap">
                             {categories.map((category) => (
                                 <div key={category} className="py-1.5 px-2.5 rounded-md bg-gray-200 flex items-center justify-center gap-2 mr-2 mb-2">
-                                    <span className="text-gray-800">{category}</span>
-                                    <button type="button" onClick={() => removeCategory(category)} className="text-red-600 hover:text-red-800">X</button>
+                                    <Badge>{category}</Badge>
+                                    <button type="button" aria-label={`Remover categoria ${category}`} onClick={() => removeCategory(category)} className="text-red-600 hover:text-red-800">X</button>
                                 </div>
                             ))}
                         </div>
                         <input
                             type="text"
-                            placeholder="Digite uma categoria e pressione Enter"
+                            id="tags" placeholder="Digite uma categoria e pressione Enter"
                             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
@@ -108,8 +100,8 @@ const CreatePostPage = () => {
 
                     <div className='mb-6'>
                         <input
-                            type="file"
-                            accept="image/*"
+                            ref={fileInput} aria-label="Imagem do post" type="file"
+                            accept="image/jpeg,image/png,image/gif,image/webp"
                             onChange={e => {
                                 const fileSelected = e.target.files?.[0];
                                 if (fileSelected) {
@@ -123,7 +115,7 @@ const CreatePostPage = () => {
                     <div className="mb-6">
                         <label htmlFor="description" className="block text-gray-700 text-lg font-semibold mb-2">Descrição:</label>
                         <textarea
-                            id="description"
+                            id="description" required maxLength={10000}
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -132,13 +124,10 @@ const CreatePostPage = () => {
                         ></textarea>
                     </div>
 
-                    {error && (
-                        <p className="text-red-500 text-sm italic mb-4">{error}</p>
-                    )}
+                    <Alert message={error || actionError} />
 
-                    <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline">
-                        Criar Post
-                    </button>
+                    <Button type="submit" loading={submitting} loadingText="Criando post...">Criar Post</Button>
+                    </fieldset>
                 </form>
             </div>
         </div>

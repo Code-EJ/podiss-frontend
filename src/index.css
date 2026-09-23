@@ -1,147 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body {
-    font-family: 'Roboto', sans-serif;
-}
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Roboto', sans-serif;
+/* Shared interaction rules and original editorial palette. Credits: oEnzoRibas. */
+@keyframes top-loader { from { transform: translateX(-100%); } to { transform: translateX(400%); } }
+.top-loader { animation: top-loader 1.2s ease-in-out infinite; }
+:where(a, button, input, textarea, select):focus-visible { outline: 2px solid #ef4444; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .top-loader { animation: none; width: 100%; }
+  *, *::before, *::after { scroll-behavior: auto !important; }
 }
-/* Estilo do cabeçalho */
-.header {
-    background-color: #fff;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    flex-wrap: wrap;
-  }
-  
-  .logo {
-    height: 40px;
-  }
-  
-  .header nav a {
-    margin: 0 15px;
-    color: red;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  .header nav a:hover {
-    text-decoration: underline;
-  }
-  
-  /* Seção de boas-vindas */
-  .welcome-section {
-    background-color: #d20c0c;
-    color: #ffffff;
-    padding: 50px 20px;
-    text-align: center;
-  }
-  
-  .welcome-section h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-  }
-  
-  .welcome-section p {
-    font-size: 1.2rem;
-    color: #aad1ff;
-  }
-  
-  /* Estilo para a seção de Destaques */
-  .highlights-container {
-    max-width: 1000px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .highlights-container h2 {
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .highlights {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-  }
-  
-  .highlight {
-    background-color: #fff;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: bold;
-    color: #333;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: hidden;
-  }
-  
-  .highlight:hover {
-    background-color: #f0f0f0;
-    cursor: pointer;
-  }
-  
-  .highlight-thumbnail {
-    width: 100%;
-    height: auto;
-    max-width: 100%;
-    border-radius: 8px 8px 0 0;
-  }
-  
-  .highlight span {
-    padding: 10px;
-    font-size: 1rem;
-    color: #333;
-  }
-  
-  /* Estilo do rodapé */
-  .footer {
-    background-color: #333;
-    color: #ddd;
-    padding: 15px 0;
-    text-align: center;
-    font-size: 0.9rem;
-  }
-  
-  /* Media para responsividade */
-  
-  /* Ajuste para telas pequenas (celulares) */
-  @media (max-width: 600px) {
-    .welcome-section h1 {
-      font-size: 1.8rem;
-    }
-  
-    .welcome-section p {
-      font-size: 1rem;
-    }
-  
-    .highlights {
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-  }
-  
-  /* Ajuste para telas médias (tablets) */
-  @media (min-width: 601px) and (max-width: 1024px) {
-    .welcome-section h1 {
-      font-size: 2rem;
-    }
-  
-    .welcome-section p {
-      font-size: 1.1rem;
-    }
-  
-    .highlights {
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-  }
+body, h1, h2, h3, h4, h5, h6 { font-family: 'Roboto', sans-serif; }
+.welcome-section { background-color: #d20c0c; color: #ffffff; padding: 50px 20px; text-align: center; }
+.welcome-section h1 { font-size: 2.5rem; margin-bottom: 10px; }
+.welcome-section p { font-size: 1.2rem; color: #aad1ff; }
+@media (max-width: 600px) {
+  .welcome-section h1 { font-size: 1.8rem; }
+  .welcome-section p { font-size: 1rem; }
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+  .welcome-section h1 { font-size: 2rem; }
+  .welcome-section p { font-size: 1.1rem; }
+}

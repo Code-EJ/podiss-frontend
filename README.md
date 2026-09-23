@@ -1,93 +1,59 @@
 # PodIss Frontend
 
-Frontend application for the PodIss podcast platform.
+SPA React + TypeScript integrada ao backend Spring Boot. Conteúdo das páginas em português; código e contratos internos padronizados em inglês. Créditos desta revisão: **oEnzoRibas**.
 
-## About
+## Rodar localmente
 
-The PodIss Frontend is the web application that provides the user interface for the PodIss podcast platform.
+Pré-requisitos: Node >=22.12 (ambiente validado Node 24), npm e backend Docker ativo em http://localhost:18080.
 
-The application is built with React, TypeScript, and Vite, with a focus on a modern, maintainable, and responsive web experience.
+Na pasta do backend, no PowerShell:
 
-## Technologies
-
-* React
-* TypeScript
-* Vite
-* ESLint
-* Node.js
-* npm
-
-## Requirements
-
-Before running the project, make sure the following software is installed:
-
-* Node.js
-* npm
-
-Verify the Node.js installation with:
-
-```bash
-node --version
+```powershell
+.\scripts\dev.ps1 Up
 ```
 
-Verify npm with:
+No Git Bash, use o comando Docker do [tutorial completo](docs/development/README.md); não execute .ps1 diretamente no Bash.
 
-```bash
-npm --version
-```
+Na pasta deste frontend, em qualquer um dos dois terminais:
 
-## Getting Started
-
-Clone the repository:
-
-```bash
-git clone https://github.com/Code-EJ/podiss-frontend.git
-cd podiss-frontend
-```
-
-Install the project dependencies:
-
-```bash
-npm install
-```
-
-Start the development server:
-
-```bash
+```sh
+npm ci
 npm run dev
 ```
 
-The application will be available at the address provided by Vite in the terminal.
+Abra http://localhost:5173. A URL local já está em .env.development, sem segredos. O arquivo .env.dev com senhas pertence **somente ao backend**. Veja a [precedência de configuração](docs/configuration/README.md).
 
-## Building
+## Login e banco
 
-Create a production build with:
+Acesse /admin/login com dev_admin e a senha DEV_ADMIN_PASSWORD do backend/.env.dev. Não há cadastro público; criação de usuários adicionais é operação ADMIN no backend. O bootstrap não troca senha de usuário existente.
 
-```bash
-npm run build
+O [passo a passo de desenvolvimento](docs/development/README.md) explica como enviar contato/sugestão, criar posts e conferir os registros por SQL no MariaDB local. O frontend nunca recebe credenciais do banco ou VPS.
+
+## Testar
+
+```sh
+npm run check
+npm audit
+npm run test:integration
 ```
 
-To preview the production build locally:
+check executa lint, testes e build. Integração é opt-in e exige backend local: cria um contato e sugestão sintéticos e remove seu post temporário. Não usa produção. Consulte o [relatório final](docs/ADRS/0001/reports/10-final-audit.md) para cobertura e riscos residuais.
 
-```bash
-npm run preview
-```
+## Publicar
 
-## Linting
+npm run build gera dist. VITE_API_URL precisa conter a URL HTTPS real confirmada antes do build. Não publicar .env, src ou node_modules. Siga o [procedimento de deploy/backup/rollback](docs/deployment/README.md); esta revisão não publicou na Hostinger.
 
-Run ESLint with:
+## Documentação
 
-```bash
-npm run lint
-```
+[Índice](docs/README.md) · [Contratos HTTP](docs/api/README.md) · [Plano e relatórios](docs/ADRS/0001/master-plan.md)
 
-## Configuration
+Componentes, hooks e helpers possuem comentários TSDoc e créditos @author oEnzoRibas, preservando os direitos e créditos originais abaixo.
 
-Environment-specific configuration should not be committed to the repository when it contains sensitive information.
-
-API endpoints, authentication configuration, and other environment-specific values should be provided through environment variables or appropriate external configuration mechanisms.
+Para mudar nomes da navbar, rotas, rodapé e módulos, siga o [guia de manutenção](docs/architecture/frontend-modules.md). A navbar é compartilhada por páginas públicas, login e painel; o [relatório de padronização](docs/ADRS/0004/reports/01-final-report.md) registra decisões e testes.
 
 ## Contributing
+
+Para componentes, feedback e correção da foto ao editar posts, consulte o [guia de UI](docs/architecture/ui-feedback.md) e o [relatório de validação](docs/ADRS/0005/reports/01-final-report.md).
 
 This repository is maintained by Code Soluções em Tecnologia Júnior.
 
